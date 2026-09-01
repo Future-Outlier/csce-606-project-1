@@ -13,6 +13,6 @@
 ## known limitations
 
 ## team member names
-\* Ian Beckett
-\* Han-Ju Chen
+- Ian Beckett
+- Han-Ju Chen
 

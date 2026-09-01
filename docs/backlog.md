@@ -7,7 +7,6 @@
 - plan architecture
 - design UI for session
 - design UI for review
-- design UI for review
 
 - peform four (4) pair programming sessions with alternating roles. Document each in docs/pairing_log.md
 - write tests for usage statement
@@ -32,8 +31,10 @@
 - write tests for view card details
 - implement view card details
 
-- write README
+- write docs/README.md
 - perform and document retrospective
+
+- write docs/design.md
 
 ## In Progress
 - define features and scope for project approval

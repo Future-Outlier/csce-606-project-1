@@ -15,13 +15,16 @@
 - implement deck
 - write tests for card draw
 - implement card draw
-- write tests for reset
-- implement reset
+- implement tests for shuffle
+- implement shuffle
 - write tests for save session with timestamp
 - implement save session with timestamp
 - write tests for load session
 - implement load session
 - write tests for review
+- implement review
+- write tests for Q&A
+- implement tests for Q&A
 - implement review
 - integrate test coverage reports
 

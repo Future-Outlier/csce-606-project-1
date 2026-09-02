@@ -6,8 +6,9 @@
 - Q&A: ask the user to submit a question/purpose before they draw. Save the
 question and use it
 - deck shuffle
-- save time and card frequency
+- save timesteamp
 - use an LLM API
+- save session
 
 ## work completed
 - updated project proposal features with broader scope and improved end-to-end tests

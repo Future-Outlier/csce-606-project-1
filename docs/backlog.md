@@ -7,6 +7,8 @@
 - plan architecture
 - design UI for session
 - design UI for review
+- write database/JSON schema for session
+- write API contract for interation with OpenAI LLM service
 
 - peform four (4) pair programming sessions with alternating roles. Document each in docs/pairing_log.md
 - write tests for usage statement
@@ -15,7 +17,7 @@
 - implement deck
 - write tests for card draw
 - implement card draw
-- implement tests for shuffle
+- write tests for shuffle
 - implement shuffle
 - write tests for save session with timestamp
 - implement save session with timestamp
@@ -24,9 +26,10 @@
 - write tests for review
 - implement review
 - write tests for Q&A
-- implement tests for Q&A
-- implement review
-- integrate test coverage reports
+- implement Q&A
+- write tests for OpenAI integration
+- implement OpenAI integration
+- implement test coverage reports
 
 - Create ASCII art
 - write tests for ASCII art viewing feature

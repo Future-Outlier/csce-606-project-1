@@ -1,3 +1,4 @@
+# Defines how the tarot app reads and responds to terminal commands.
 module TarotCLI
   class CLI
     USAGE = <<~TEXT.freeze

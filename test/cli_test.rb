@@ -1,3 +1,4 @@
+# Checks how the CLI handles help, input, errors, and exit commands.
 require "stringio"
 require "test_helper"
 require "tarot_cli/cli"

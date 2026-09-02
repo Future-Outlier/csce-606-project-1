@@ -4,7 +4,6 @@
 
 ## ideas
 - Q&A: ask the user to submit a question/purpose before they draw. Save the
--
 question and use it
 - deck shuffle
 

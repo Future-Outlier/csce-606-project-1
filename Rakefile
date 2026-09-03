@@ -1,4 +1,3 @@
-# Defines the command used to run all automated tests.
 require "rake/testtask"
 
 Rake::TestTask.new do |task|

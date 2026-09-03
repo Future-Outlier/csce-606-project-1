@@ -1,10 +1,11 @@
 # backlog
 
 ## To Do
-- peform one (1) planning session and document in docs/planning.md
-- plan scope to get project approval
 - write user stories for new features in docs/user_stories.md
-- plan architecture
+- Add explicit "definition of done" for each PR to docs/design.md
+- Add story points to each story or feature
+- Add Architecture diagram or brief module explanation in docs/design.md (currently minimal)
+- Clarify the readings.json schema
 - design UI for session
 - design UI for review
 - write database/JSON schema for session
@@ -46,6 +47,9 @@
 - define features and scope for project approval
 
 ## Done
+- Setup GitHub Actions for running tests
+- peform one (1) planning session and document in docs/planning.md
+- plan scope to get project approval
 - populate the backlog (this document)
 - propose some initial features with appropriate scope
 - decide on a project idea

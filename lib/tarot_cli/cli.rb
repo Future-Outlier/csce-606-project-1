@@ -1,4 +1,3 @@
-# Defines how the tarot app reads and responds to terminal commands.
 module TarotCLI
   class CLI
     USAGE = <<~TEXT.freeze
@@ -9,13 +8,11 @@ module TarotCLI
         exit, quit         Exit tarot-cli
     TEXT
 
-    # Allows the CLI to use the real terminal or another input and output source.
     def initialize(input: $stdin, output: $stdout)
       @input = input
       @output = output
     end
 
-    # Runs one command or keeps reading commands until the interactive session ends.
     def run(arguments = [])
       unless arguments.empty?
         result = execute(arguments.join(" "))
@@ -36,7 +33,6 @@ module TarotCLI
 
     attr_reader :input, :output
 
-    # Converts one line of input into help, exit, or an error response.
     def execute(line)
       command = line.strip
 

@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
+require_relative 'card'
+
+FILE_PATH = File.expand_path('../data/cards.json', __dir__)
+
 class Deck
-  attr_accessor :drawn_cards
+  attr_reader :drawn_cards
 
   def initialize
+    @cards = Card.load_from_file(FILE_PATH)
     @drawn_cards = []
   end
 
   def draw_card
-    cardID = rand(78)
-    drawn_cards.push(cardID)
+    id = rand(@cards.size)
+    card = @cards[id]
+    drawn_cards.push(card)
   end
 
   def reset

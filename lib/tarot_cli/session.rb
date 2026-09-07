@@ -30,7 +30,7 @@ module TarotCLI
         puts 'Drawing card...'
         @deck.draw_card
         puts LINE
-        formatted_cards = @deck.drawn_cards.map { |card_id| "[ #{card_id} ]" }.join(' -> ')
+        formatted_cards = @deck.drawn_cards.map { |card| "[ #{card.name} ]" }.join(' -> ')
         puts "Current Spread: #{formatted_cards}"
         puts LINE
       when 'details'

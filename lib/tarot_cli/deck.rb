@@ -13,9 +13,12 @@ class Deck
   end
 
   def draw_card
-    id = rand(@cards.size)
-    card = @cards[id]
-    drawn_cards.push(card)
+    available_cards = @cards - @drawn_cards
+    return nil if available_cards.empty?
+
+    card = available_cards.sample
+    @drawn_cards.push(card)
+    card
   end
 
   def reset

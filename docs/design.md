@@ -8,7 +8,8 @@ The document will evolve with implementation and does not block unrelated coding
 
 - Session
     - displays user interface (?)
-    - holds the user's question and provides it to the LLM when needed
+    - holds the active question and interpretation
+    - clears active reading state and returns to the main menu after Shuffle
     - reads and writes from disk to save and load session states
     - handles user commands
 
@@ -79,7 +80,7 @@ Available Commands:
 Usage Guidance:
   - Type 'new' to set an intention and begin drawing up to 3 cards.
   - Type 'details [card_name]' during a session to read about its symbolism.
-  - Type 'reset' at any time to clear the current state.
+  - Type 'shuffle' during a session to clear the current reading.
 
 >
 ==================================================================================
@@ -97,7 +98,7 @@ Enter your intention or question for this session:
 Current Spread:
 ------------------------------------------------------------------------
 
-Available Commands: [draw], [details <card>], [save], [reset], [help], [exit]
+Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
 
 > draw
 
@@ -109,7 +110,7 @@ The Tower represents sudden upheaval and disruption. In the context of
 your software launch, it warns of unexpected technical debt or critical
 bugs crashing your production deployment. Prepare mitigation plans.
 
-Available Commands: [draw], [details <card>], [save], [reset], [help], [exit]
+Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
 
 > draw
 
@@ -122,7 +123,7 @@ While your initial launch window experiences an outage, your team will
 rapidly look out toward broader horizons, successfully deploying a stable
 architecture immediately after the initial storm.
 
-Available Commands: [draw], [details <card>], [save], [reset], [help], [exit]
+Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
 
 > details The Tower
 ------------------------------------------------------------------------
@@ -154,12 +155,12 @@ complete fulfillment (The World). The launch will be chaotic at first,
 but an absolute victory in the end.
 ------------------------------------------------------------------------
 
-Available Commands: [draw], [details <card>], [save], [reset], [help], [exit]
+Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
 
 > draw
 [!] You have drawn the maximum limit of 3 cards.
 
-Available Commands: [details <card>], [save], [reset], [help], [exit]
+Available Commands: [details <card>], [save], [shuffle], [help], [exit]
 
 > save
 Session successfully saved to disk. Returning to Main Menu...
@@ -180,7 +181,7 @@ Available Commands:
 ==================================================================================
 ```
 
-### example UI: mid-session reset
+### example UI: mid-session Shuffle
 ```
 => new
 Enter your intention or question for this session:
@@ -191,7 +192,7 @@ Enter your intention or question for this session:
 Current Spread:
 ------------------------------------------------------------------------
 
-Available Commands: [draw], [details <card>], [save], [reset], [help], [exit]
+Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
 
 > draw
 
@@ -206,9 +207,8 @@ might bring a tinge of sadness or nostalgia, the journey across the water is
 essential for your mental peace. The destination promises much calmer, more
 supportive conditions.
 
-> reset
-Are you sure you want to reset? Unsaved progress will be lost. (y/n): y
-Session cleared. Returning to Main Menu...
+> shuffle
+Session cleared and deck shuffled. Returning to Main Menu...
 
 ========================================================================
                      TAROT CLI v1.0
@@ -231,12 +231,12 @@ Available Commands:
 and all 4 interpretation statements for that session.
 - If there is no session to load/review but the user attempts to load/review,
 they will be shown a fallback message.
-- At any time, the user may shuffle/reset. If they have set an intention/question, they will
-be asked if they would like to save the session before the session is reset:
-"Are you sure you want to reset? Unsaved progress will be lost."
+- During a session, the user may Shuffle to return every card to the deck, clear the active
+question and interpretation, and return to the main menu. A new non-blank question is required
+before the next draw.
 - At any time, user can use the help command to get usage guidance
 - The user may not review a session while they are currently in a session. They must
-shuffle/reset before they can review other sessions.
+  Shuffle before they can review other sessions.
 - When user starts a new session, they are prompted to submit an intention/question.
 - At any time after submitting their intention/question, the user may save the session.
 - When user has submitted their intention/question, they may start drawing cards.

@@ -80,7 +80,7 @@ Available Commands:
 Usage Guidance:
   - Type 'new' to set an intention and begin drawing up to 3 cards.
   - Type 'details [card_name]' during a session to read about its symbolism.
-  - Type 'shuffle' during a session to clear the current reading.
+  - Type 'shuffle' during a session to clear the current state.
 
 >
 ==================================================================================

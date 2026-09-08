@@ -8,7 +8,6 @@ module TarotCLI
         exit, quit         Exit tarot-cli
     TEXT
 
-    # Supports both shell-friendly one-shot commands and a persistent interactive session.
     def run(arguments = [])
       unless arguments.empty?
         result = execute(arguments.join(" "))
@@ -27,7 +26,6 @@ module TarotCLI
 
     private
 
-    # Returns command outcomes so run can choose the correct exit status.
     def execute(line)
       command = line.strip
 

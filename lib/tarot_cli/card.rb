@@ -2,7 +2,7 @@
 
 require 'json'
 
-class Card < Data.define(:id, :name, :description) do
+Card = Data.define(:id, :name, :description) do
   # preload all card data to minimize file I/O
   # this isn't an issue because cards.json is less than 30 kilobytes
   def self.load_from_file(file_path)
@@ -17,5 +17,4 @@ class Card < Data.define(:id, :name, :description) do
       )
     end
   end
-end
 end

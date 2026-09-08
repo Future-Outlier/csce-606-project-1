@@ -4,6 +4,10 @@ require_relative 'deck'
 
 module TarotCLI
   class Session
+    LINE = <<~TEXT
+      ------------------------------------------------------------------------
+    TEXT
+
     def initialize(question)
       @question = question
       @deck = Deck.new
@@ -23,27 +27,26 @@ module TarotCLI
 
     def execute(line)
       command = line.strip
+      return if command.empty?
+
       case command
-      when ''
-        nil
-      when 'draw'
-        puts 'Drawing card...'
-        @deck.draw_card
-        puts LINE
-        formatted_cards = @deck.drawn_cards.map { |card| "[ #{card.name} ]" }.join(' -> ')
-        puts "Current Spread: #{formatted_cards}"
-        puts LINE
-      when 'details'
-        puts 'not yet implemented'
-      when 'save'
-        puts 'not yet implemented'
-      when 'reset'
-        puts 'not yet implemented'
+      when 'draw' then draw_card
+      when 'details', 'save', 'reset' then puts 'not yet implemented'
       end
     end
 
-    LINE = <<~TEXT
-      ------------------------------------------------------------------------
-    TEXT
+    private
+
+    def draw_card
+      puts 'Drawing card...'
+      @deck.draw_card
+      puts LINE
+      puts "Current Spread: #{formatted_cards}"
+      puts LINE
+    end
+
+    def formatted_cards
+      @deck.drawn_cards.map { |card| "[ #{card.name} ]" }.join(' -> ')
+    end
   end
 end

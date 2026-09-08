@@ -1,7 +1,7 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-ruby "4.0.1"
+ruby '4.0.1'
 
-gem "minitest", "~> 6.0"
-gem "rake", "~> 13.3"
+gem 'minitest', '~> 6.0'
+gem 'rake', '~> 13.3'
 gem 'rubocop', require: false

@@ -15,24 +15,16 @@ module TarotCLI
         exit, quit        Exit tarot-cli
     TEXT
 
-    def initialize(input: $stdin, output: $stdout)
-      @input = input
-      @output = output
-    end
-
     def run(arguments = [])
       unless arguments.empty?
         result = execute(arguments.join(' '))
         return result == :unknown ? 1 : 0
       end
 
-      output.puts <<~TEXT
-        Welcome to tarot-cli.
-        Type \'help\' to see available commands.
+      puts 'Welcome to tarot-cli.'
+      puts "Type 'help' to see available commands."
 
-      TEXT
-
-      while (line = input.gets)
+      while (line = gets)
         break if execute(line) == :exit
       end
 
@@ -41,8 +33,6 @@ module TarotCLI
 
     private
 
-    attr_reader :input, :output
-
     def execute(line)
       command = line.strip
 
@@ -50,24 +40,24 @@ module TarotCLI
       when ''
         nil
       when 'help', '-h', '--help'
-        output.puts USAGE
+        puts USAGE
       when 'new'
-        output.puts 'Enter your intention or question for this session: '
+        puts 'Enter your intention or question for this session: '
         question = gets.chomp
         session = Session.new(question)
         session.run
       when 'review'
-        output.puts 'not yet implemented'
+        puts 'not yet implemented'
       when 'load'
-        output.puts 'not yet implemented'
+        puts 'not yet implemented'
       when 'reset'
-        output.puts 'No session initiated. Nothing to reset.'
+        puts 'No session initiated. Nothing to reset.'
         :exit
       when 'exit', 'quit'
         :exit
       else
-        output.puts "Unknown command: #{command}"
-        output.puts "Type 'help' to see available commands."
+        puts "Unknown command: #{command}"
+        puts "Type 'help' to see available commands."
         :unknown
       end
     end

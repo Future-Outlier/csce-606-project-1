@@ -21,17 +21,17 @@ class CLITest < Minitest::Test
   end
 
   def test_interactive_mode_reports_unknown_command_and_continues
-    _status, output = run_cli("fortune\nexit\n")
+    _status, output = run_cli("unknown\nexit\n")
 
-    assert_includes output, "Unknown command: fortune"
+    assert_includes output, "Unknown command: unknown"
     assert_includes output, "Type 'help' to see available commands."
   end
 
   def test_single_command_mode_returns_error_for_unknown_command
-    status, output = run_cli("", ["fortune"])
+    status, output = run_cli("", ["unknown"])
 
     assert_equal 1, status
-    assert_includes output, "Unknown command: fortune"
+    assert_includes output, "Unknown command: unknown"
   end
 
   def test_blank_input_is_ignored

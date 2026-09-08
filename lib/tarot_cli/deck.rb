@@ -23,6 +23,5 @@ class Deck
 
   def shuffle
     @drawn_cards.clear
-    @cards.shuffle!
   end
 end

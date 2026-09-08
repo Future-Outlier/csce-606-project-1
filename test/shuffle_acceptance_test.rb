@@ -26,7 +26,7 @@ class ShuffleAcceptanceTest < Minitest::Test
     assert_equal 0, status
     assert_equal 2, spreads.length
     spreads.each { |spread| refute_includes spread, '->' }
-    assert_equal 2, output.scan('Session cleared and deck shuffled. Returning to Main Menu...').length
+    assert_equal 2, output.scan('Session cleared. All cards are available again. Returning to Main Menu...').length
     assert_equal 3, output.scan('Enter your intention or question for this session:').length
     assert_includes output, "Start a new reading with 'new' and enter a question before drawing."
     assert_includes output, 'Question cannot be blank.'

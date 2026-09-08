@@ -26,6 +26,6 @@ class SessionShuffleTest < Minitest::Test
     assert_empty deck.drawn_cards
     assert_nil session.question
     assert_nil session.interpretation
-    assert_includes output, 'Session cleared and deck shuffled. Returning to Main Menu...'
+    assert_includes output, 'Session cleared. All cards are available again. Returning to Main Menu...'
   end
 end

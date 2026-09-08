@@ -208,7 +208,7 @@ essential for your mental peace. The destination promises much calmer, more
 supportive conditions.
 
 > shuffle
-Session cleared and deck shuffled. Returning to Main Menu...
+Session cleared. All cards are available again. Returning to Main Menu...
 
 ========================================================================
                      TAROT CLI v1.0

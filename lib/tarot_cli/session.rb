@@ -61,7 +61,7 @@ module TarotCLI
       @deck.shuffle
       @question = nil
       @interpretation = nil
-      puts 'Session cleared and deck shuffled. Returning to Main Menu...'
+      puts 'Session cleared. All cards are available again. Returning to Main Menu...'
       :exit
     end
 

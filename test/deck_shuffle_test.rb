@@ -13,11 +13,13 @@ class DeckShuffleTest < Minitest::Test
   end
 
   def test_shuffle_clears_drawn_cards
+    original_order = @cards.dup
     2.times { @deck.draw_card }
 
     @deck.shuffle
 
     assert_empty @deck.drawn_cards
+    assert_equal original_order, @cards
   end
 
   def test_shuffle_returns_every_drawn_card_to_the_pool

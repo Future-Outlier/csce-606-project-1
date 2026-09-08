@@ -52,7 +52,7 @@ class TestDeck < Minitest::Test
   def test_reset_clears_drawn_cards
     @deck.draw_card
 
-    $stdout.stub(:write, nil) do
+    capture_io do
       @deck.reset
     end
 

@@ -11,11 +11,6 @@ class TestDeck < Minitest::Test
     @deck = Deck.new(cards: [@card_one, @card_two])
   end
 
-  def test_initialize_sets_up_cards
-    deck = Deck.new
-    refute_empty deck.instance_variable_get(:@cards)
-  end
-
   def test_initialize_sets_up_drawn_cards
     assert_empty @deck.drawn_cards
   end

@@ -15,24 +15,16 @@ module TarotCLI
         exit, quit        Exit tarot-cli
     TEXT
 
-    def initialize(input: $stdin, output: $stdout)
-      @input = input
-      @output = output
-    end
-
     def run(arguments = [])
       unless arguments.empty?
         result = execute(arguments.join(' '))
         return result == :unknown ? 1 : 0
       end
 
-      output.puts <<~TEXT
-        Welcome to tarot-cli.
-        Type \'help\' to see available commands.
+      puts 'Welcome to tarot-cli.'
+      puts "Type 'help' to see available commands."
 
-      TEXT
-
-      while (line = input.gets)
+      while (line = gets)
         break if execute(line) == :exit
       end
 
@@ -41,35 +33,37 @@ module TarotCLI
 
     private
 
-    attr_reader :input, :output
-
     def execute(line)
       command = line.strip
+      execute_command(command) unless command.empty?
+    end
 
+    def execute_command(command)
       case command
-      when ''
-        nil
-      when 'help', '-h', '--help'
-        output.puts USAGE
-      when 'new'
-        output.puts 'Enter your intention or question for this session: '
-        question = gets.chomp
-        session = Session.new(question)
-        session.run
-      when 'review'
-        output.puts 'not yet implemented'
-      when 'load'
-        output.puts 'not yet implemented'
-      when 'reset'
-        output.puts 'No session initiated. Nothing to reset.'
-        :exit
-      when 'exit', 'quit'
-        :exit
+      when 'help', '-h', '--help' then puts USAGE
+      when 'new' then start_session
+      when 'review', 'load' then puts 'not yet implemented'
+      when 'reset' then reset_without_session
+      when 'exit', 'quit' then :exit
       else
-        output.puts "Unknown command: #{command}"
-        output.puts "Type 'help' to see available commands."
-        :unknown
+        unknown_command(command)
       end
+    end
+
+    def start_session
+      puts 'Enter your intention or question for this session: '
+      Session.new(gets.chomp).run
+    end
+
+    def reset_without_session
+      puts 'No session initiated. Nothing to reset.'
+      :exit
+    end
+
+    def unknown_command(command)
+      puts "Unknown command: #{command}"
+      puts "Type 'help' to see available commands."
+      :unknown
     end
   end
 end

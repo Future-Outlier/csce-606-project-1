@@ -1,1 +1,9 @@
-inherit_from: .rubocop_todo.yml
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 4.0
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false

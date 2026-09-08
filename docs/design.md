@@ -353,53 +353,40 @@ an end-to-end test
 
 #### motivation
 
-In order to have a project with a wider scope, we decided to add LLM
-integration to act as a fortune teller or tarot card interpreter for the user.
-That way, the user could just read the interpretations instead of having to
-study themselves the esoteric meanings of the cards and how they relate to the
-question/intent they had in mind.
+To give the project a wider scope, we decided to add LLM integration that acts
+as a fortune teller or tarot card interpreter for the user. This allows the user
+to read the interpretations directly instead of studying the meanings of the
+cards and how they relate to the question or intention they have in mind.
 
 #### solution 1
 
-Use LLM functionality for divining the user's question/intent, drawing the
-cards, and interpreting the meanings of the cards.
+Use a third-party API, such as OpenAI, to interpret the reading.
 
 ##### pros:
-- less source code requred on our end
+- Potentially more accurate because the available models may have more
+  parameters.
 
 ##### cons:
-- the LLM might make a mistake and draw the same card twice.
-- the LLM might be influenced by the user's statement of intent to perform an action we
-didn't intend.
-- security: The LLM would be responsible for generating data that later gets saved to disk.
-This seems risky.
-- security: probably a greater risk of prompt injection
+- More expensive.
+- Requires an internet connection.
 
 #### solution 2
 
-Use LLM functionality only for divining the user's question/intent based on the cards
-drawn.
+Use a free local LLM, such as a model from the Qwen family, to interpret the
+reading.
 
 ##### pros:
-- more secure: there's less of a risk of prompt injection or saving unsafe data to disk
-- deterministic control over the deck; we can ensure the same card isn't drawn twice
+- Less expensive.
+- Can run without an internet connection after setup.
 
 ##### cons:
-- need to implement the deck, card draw, etc. in the source code
+- May be less accurate because the model may have fewer parameters.
 
 #### decision
 
-We decided on solution 2: application code controls draws, while the LLM only
-interprets the question and drawn cards.
-
-#### LLM provider tradeoff
-
-- Third-party API, such as OpenAI: potentially stronger models and no local setup,
-  but usage fees and network/API-key dependencies.
-- Local LLM, such as Qwen3.5-0.8B: no per-call fee, can work offline, and small
-  models can run on CPU, but local setup, speed, and output quality need testing to prove it works.
-
-We plan to use local Qwen; its exact setup will be designed with the LLM feature.
+We decided on solution 2 because it is easier to test without depending on a
+paid external service, and the grader does not need to pay to evaluate the
+project.
 
 #### test plan
 

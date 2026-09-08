@@ -5,34 +5,42 @@ require 'test_helper'
 require 'tarot_cli/cli'
 
 class ShuffleAcceptanceTest < Minitest::Test
+  SHUFFLE_FLOW = <<~INPUT
+    new
+    First question
+    draw
+    shuffle
+    draw
+    new
+
+    Second question
+    draw
+    shuffle
+    exit
+  INPUT
+
   def test_shuffle_starts_a_clean_reading_with_a_new_question
-    input = <<~INPUT
-      new
-      First question
-      draw
-      shuffle
-      draw
-      new
-
-      Second question
-      draw
-      shuffle
-      exit
-    INPUT
-
-    status, output = run_cli(input)
-    spreads = output.lines.grep(/^Current Spread:/)
+    status, output = run_cli(SHUFFLE_FLOW)
 
     assert_equal 0, status
+    assert_clean_spreads(output)
+    assert_new_question_required(output)
+  end
+
+  private
+
+  def assert_clean_spreads(output)
+    spreads = output.lines.grep(/^Current Spread:/)
     assert_equal 2, spreads.length
     spreads.each { |spread| refute_includes spread, '->' }
     assert_equal 2, output.scan('Session cleared. All cards are available again. Returning to Main Menu...').length
+  end
+
+  def assert_new_question_required(output)
     assert_equal 3, output.scan('Enter your intention or question for this session:').length
     assert_includes output, "Start a new reading with 'new' and enter a question before drawing."
     assert_includes output, 'Question cannot be blank.'
   end
-
-  private
 
   def run_cli(input)
     original_stdin = $stdin

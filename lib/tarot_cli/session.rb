@@ -3,8 +3,11 @@
 require_relative 'deck'
 
 module TarotCLI
-  # Owns active reading state so Shuffle clears it as one lifecycle.
   class Session
+    LINE = <<~TEXT
+      ------------------------------------------------------------------------
+    TEXT
+
     attr_reader :question, :interpretation
 
     def initialize(question, deck: Deck.new, interpretation: nil)
@@ -27,34 +30,29 @@ module TarotCLI
 
     def execute(line)
       command = line.strip
+      return if command.empty?
+
       case command
-      when ''
-        nil
-      when 'draw'
-        draw_card
-      when 'details'
-        puts 'not yet implemented'
-      when 'save'
-        puts 'not yet implemented'
-      when 'shuffle'
-        shuffle
+      when 'draw' then draw_card
+      when 'details', 'save' then puts 'not yet implemented'
+      when 'shuffle' then shuffle
       end
     end
 
     private
 
     def draw_card
-      if @question.to_s.strip.empty?
-        puts "Start a new reading with 'new' and enter a question before drawing."
-        return
-      end
+      return missing_question if @question.to_s.strip.empty?
 
       puts 'Drawing card...'
       @deck.draw_card
       puts LINE
-      formatted_cards = @deck.drawn_cards.map { |card| "[ #{card.name} ]" }.join(' -> ')
       puts "Current Spread: #{formatted_cards}"
       puts LINE
+    end
+
+    def missing_question
+      puts "Start a new reading with 'new' and enter a question before drawing."
     end
 
     def shuffle
@@ -65,8 +63,8 @@ module TarotCLI
       :exit
     end
 
-    LINE = <<~TEXT
-      ------------------------------------------------------------------------
-    TEXT
+    def formatted_cards
+      @deck.drawn_cards.map { |card| "[ #{card.name} ]" }.join(' -> ')
+    end
   end
 end

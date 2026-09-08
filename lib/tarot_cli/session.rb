@@ -5,11 +5,12 @@ require_relative 'deck'
 module TarotCLI
   # Owns active reading state so Shuffle clears it as one lifecycle.
   class Session
-    attr_reader :question
+    attr_reader :question, :interpretation
 
-    def initialize(question)
+    def initialize(question, deck: Deck.new, interpretation: nil)
       @question = question
-      @deck = Deck.new
+      @deck = deck
+      @interpretation = interpretation
       puts <<~TEXT
         [Session Initialized]
         Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
@@ -59,6 +60,7 @@ module TarotCLI
     def shuffle
       @deck.shuffle
       @question = nil
+      @interpretation = nil
       puts 'Session cleared and deck shuffled. Returning to Main Menu...'
       :exit
     end

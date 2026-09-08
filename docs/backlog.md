@@ -3,9 +3,7 @@
 ## To Do
 
 ### Planning and Design
-- Add Architecture diagram or brief module explanation in docs/design.md (currently minimal)
 - Clarify the readings.json schema
-- design UI for session
 - design UI for review
 - write database/JSON schema for session
 - write API contract for interaction with local Qwen model
@@ -15,13 +13,6 @@
 - Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md
 
 ### Essential Features - Implementation
-- write tests for usage statement
-- implement usage statement
-- write tests for deck
-- implement deck
-- write tests for card draw
-- implement card draw
-- write tests for shuffle
 - implement shuffle
 - write tests for save session with timestamp
 - implement save session with timestamp
@@ -50,8 +41,17 @@
 - finalize docs/design.md
 
 ## In Progress
+- write tests for usage statement
+- write tests for deck
+- write tests for card draw
+- write tests for shuffle
 
 ## Done
+- Add Architecture diagram or brief module explanation in docs/design.md (currently minimal)
+- design UI for session
+- implement usage statement
+- implement deck
+- implement card draw
 - Define features and scope for project approval (Completed - see PR #33)
 - align user stories and acceptance criteria in docs/user_stories.md
 - Setup GitHub Actions for running tests

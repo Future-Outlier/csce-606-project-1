@@ -45,3 +45,6 @@ Coverage reporting is planned for a later PR.
 ## team member names
 - Ian Beckett
 - Han-Ju Chen
+
+## AI Citations
+- [Card descriptions](https://github.com/ianebeckett/csce-606-project-1/blob/draw-one-card/lib/data/cards.json) generated with Grok (xAI).

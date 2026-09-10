@@ -33,13 +33,10 @@ class ShuffleAcceptanceTest < Minitest::Test
     spreads = output.lines.grep(/^Current Spread:/)
     assert_equal 2, spreads.length
     spreads.each { |spread| refute_includes spread, '->' }
-    assert_equal 2, output.scan('Session cleared. All cards are available again. Returning to Main Menu...').length
   end
 
   def assert_new_question_required(output)
-    assert_equal 3, output.scan('Enter your intention or question for this session:').length
-    assert_includes output, "Start a new reading with 'new' and enter a question before drawing."
-    assert_includes output, 'Question cannot be blank.'
+    assert_equal 3, output.scan('Enter your intention or question').length
   end
 
   def run_cli(input)

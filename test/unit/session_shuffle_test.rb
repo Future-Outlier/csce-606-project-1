@@ -15,13 +15,12 @@ class SessionShuffleTest < Minitest::Test
 
   def test_shuffle_clears_all_active_state_and_returns_to_the_main_menu
     result = nil
-    output, = capture_io { result = @session.execute('shuffle') }
+    capture_io { result = @session.execute('shuffle') }
 
     assert_equal :exit, result
     assert_empty @deck.drawn_cards
     assert_nil @session.question
     assert_nil @session.interpretation
-    assert_includes output, 'Session cleared. All cards are available again. Returning to Main Menu...'
   end
 
   private

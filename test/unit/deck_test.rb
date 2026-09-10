@@ -32,6 +32,13 @@ class TestDeck < Minitest::Test
     assert_includes @deck.drawn_cards, second_draw
   end
 
+  def test_draw_card_does_not_draw_same_card_twice
+    first_draw = @deck.draw_card
+    second_draw = @deck.draw_card
+
+    refute_equal first_draw, second_draw
+  end
+
   def test_draw_card_returns_nil_when_no_cards_available
     deck = Deck.new(cards: [])
     assert_nil deck.draw_card

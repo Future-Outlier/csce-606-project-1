@@ -4,6 +4,7 @@ require_relative 'deck'
 
 module TarotCLI
   class Session
+    MAX_CARDS = 3
     LINE = <<~TEXT
       ------------------------------------------------------------------------
     TEXT
@@ -43,6 +44,11 @@ module TarotCLI
 
     def draw_card
       return missing_question if @question.to_s.strip.empty?
+
+      if @deck.drawn_cards.size >= MAX_CARDS
+        puts "Maximum of #{MAX_CARDS} cards reached. Shuffle before drawing again."
+        return
+      end
 
       puts 'Drawing card...'
       @deck.draw_card

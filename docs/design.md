@@ -37,10 +37,10 @@ The document will evolve with implementation and does not block unrelated coding
 │  - handles shuffle      │                                         │  │   │   │
 +─────────────────────────+                                         │  │   │   │
             ^                                                       v  │   │   v
-            │                                               +─────────────────────+
-            │                                               │        SESSION      │
-            │                                               │  - holds user state │
-+─────────────────────────+                                 │  - queries LLM      │
+            │               +─────────────────────+  load   +─────────────────────+
+            │               │    readings.json    │────────>│        SESSION      │
+            │               │                     │<────────│  - holds user state │
++─────────────────────────+ +─────────────────────+  save   │  - queries LLM      │
 │           CARD          │                                 │  - renders the UI   │
 │ - id, name, description │                                 │                     │
 +─────────────────────────+                                 +─────────────────────+
@@ -56,6 +56,24 @@ The document will evolve with implementation and does not block unrelated coding
                                                         +─────────────────────────+
 ==================================================================================
 ```
+
+### save file
+
+#### format
+```json
+{"readings": [
+    ID: Integer,
+    saved_at: String (ISO 8601),
+    question: String,
+    cards: String[],
+    interpretation: String,
+]}
+```
+
+#### sad paths
+- save fails: notify the user without crashing, then allow more commands
+- load missing file: notify the user without crashing, then allow more commands
+- blank file or load missing save: notify the user without crashing, then allow more commands
 
 ## User interface design: mock-ups, expected interactions/workflows
 
@@ -225,6 +243,8 @@ Available Commands:
 >
 ==================================================================================
 ```
+
+### expected workflows
 - User starts the application.
 - User is greeted and prompted to load, review, or start a new session.
 - If the user reviews a session, they will be shown the question, timestamp, cards drawn,

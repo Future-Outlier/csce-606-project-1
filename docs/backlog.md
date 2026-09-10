@@ -3,7 +3,6 @@
 ## To Do
 
 ### Planning and Design
-- Clarify the readings.json schema
 - design UI for review
 - write database/JSON schema for session
 - write API contract for interaction with local Qwen model
@@ -16,7 +15,7 @@
 - write tests for save session with timestamp
 - implement save session with timestamp
 - write tests for load session
-- implement load session
+- implement load session, allowing tests to inject other filepaths
 - write tests for review
 - implement review
 - write tests for Q&A with Qwen
@@ -41,11 +40,12 @@
 
 ## In Progress
 - write tests for usage statement
-- write tests for deck
-- write tests for card draw
 - implement and test Shuffle (#14)
 
 ## Done
+- write tests for deck
+- write tests for card draw
+- Clarify the readings.json schema
 - Add Architecture diagram or brief module explanation in docs/design.md (currently minimal)
 - design UI for session
 - implement usage statement

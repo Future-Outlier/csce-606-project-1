@@ -24,8 +24,8 @@ jobs:
     - name: Run RuboCop
       run: bundle exec rubocop
 
-  test:
-    name: Tests (Ruby ${{ matrix.ruby-version }})
+  unit-test:
+    name: Unit Tests (Ruby ${{ matrix.ruby-version }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -39,5 +39,23 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
-    - name: Run tests
-      run: bundle exec rake test
+    - name: Run unit tests
+      run: bundle exec rake test TEST='test/{unit/**/*_test.rb,card_test.rb}'
+
+  integration-test:
+    name: Integration Tests (Ruby ${{ matrix.ruby-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby-version: ['4.0.1']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+    - name: Run integration tests
+      run: bundle exec rake test TEST='test/{integration/**/*_test.rb,cli_test.rb}'

@@ -1,15 +1,23 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'tarot_cli/card'
-require 'tarot_cli/deck'
 require 'tarot_cli/session'
+
+class DeckSpy
+  attr_reader :shuffle_calls
+
+  def initialize
+    @shuffle_calls = 0
+  end
+
+  def shuffle
+    @shuffle_calls += 1
+  end
+end
 
 class SessionShuffleTest < Minitest::Test
   def setup
-    card = Card.new(id: 1, name: 'Card', description: 'Description')
-    @deck = Deck.new(cards: [card])
-    @deck.draw_card
+    @deck = DeckSpy.new
     @session = build_session
   end
 
@@ -18,7 +26,7 @@ class SessionShuffleTest < Minitest::Test
     capture_io { result = @session.execute('shuffle') }
 
     assert_equal :exit, result
-    assert_empty @deck.drawn_cards
+    assert_equal 1, @deck.shuffle_calls
     assert_nil @session.question
     assert_nil @session.interpretation
   end

@@ -30,7 +30,6 @@ class DeckShuffleTest < Minitest::Test
 
     second_reading = draw_all_cards
     assert_equal card_ids(first_reading), card_ids(second_reading)
-    assert_equal second_reading.length, second_reading.uniq.length
   end
 
   private

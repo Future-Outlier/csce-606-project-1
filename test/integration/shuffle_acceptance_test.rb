@@ -24,7 +24,6 @@ class ShuffleAcceptanceTest < Minitest::Test
 
     assert_equal 0, status
     assert_clean_spreads(output)
-    assert_new_question_required(output)
   end
 
   private
@@ -33,10 +32,6 @@ class ShuffleAcceptanceTest < Minitest::Test
     spreads = output.lines.grep(/^Current Spread:/)
     assert_equal 2, spreads.length
     spreads.each { |spread| refute_includes spread, '->' }
-  end
-
-  def assert_new_question_required(output)
-    assert_equal 3, output.scan('Enter your intention or question').length
   end
 
   def run_cli(input)

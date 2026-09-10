@@ -9,12 +9,15 @@ module TarotCLI
       ------------------------------------------------------------------------
     TEXT
 
-    def initialize(question)
+    attr_reader :question, :interpretation
+
+    def initialize(question, deck: Deck.new, interpretation: nil)
       @question = question
-      @deck = Deck.new
+      @deck = deck
+      @interpretation = interpretation
       puts <<~TEXT
         [Session Initialized]
-        Available Commands: [draw], [details <card>], [save], [reset], [help], [exit]
+        Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
       TEXT
     end
 
@@ -32,13 +35,16 @@ module TarotCLI
 
       case command
       when 'draw' then draw_card
-      when 'details', 'save', 'reset' then puts 'not yet implemented'
+      when 'details', 'save' then puts 'not yet implemented'
+      when 'shuffle' then shuffle
       end
     end
 
     private
 
     def draw_card
+      return missing_question if @question.to_s.strip.empty?
+
       if @deck.drawn_cards.size >= MAX_CARDS
         puts "Maximum of #{MAX_CARDS} cards reached. Shuffle before drawing again."
         return
@@ -49,6 +55,18 @@ module TarotCLI
       puts LINE
       puts "Current Spread: #{formatted_cards}"
       puts LINE
+    end
+
+    def missing_question
+      puts "Start a new reading with 'new' and enter a question before drawing."
+    end
+
+    def shuffle
+      @deck.shuffle
+      @question = nil
+      @interpretation = nil
+      puts 'Session cleared. All cards are available again. Returning to Main Menu...'
+      :exit
     end
 
     def formatted_cards

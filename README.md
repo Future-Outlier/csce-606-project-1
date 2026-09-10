@@ -36,11 +36,14 @@ Coverage reporting is planned for a later PR.
 
 - Interactive command-line interface
 - Help and usage statement
+- Start a reading with a non-blank question
+- Draw random cards without duplicates in the active reading
+- Shuffle all cards back into the deck and return to the main menu
 - Clean exit with `exit`, `quit`, or end-of-input
 
 ## known limitations
 
-- Tarot reading commands are not implemented yet.
+- Save, Review, card details, and interpretation are not implemented yet.
 
 ## team member names
 - Ian Beckett

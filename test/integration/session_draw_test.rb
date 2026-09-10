@@ -9,8 +9,7 @@ class SessionDrawTest < Minitest::Test
       Card.new(id: index + 1, name: "Card #{index + 1}", description: 'Description')
     end
     @deck = Deck.new(cards: cards)
-    @session = TarotCLI::Session.allocate
-    @session.instance_variable_set(:@deck, @deck)
+    capture_io { @session = TarotCLI::Session.new('Question', deck: @deck) }
   end
 
   def test_fourth_draw_is_rejected_until_shuffle

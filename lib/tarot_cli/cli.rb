@@ -43,7 +43,8 @@ module TarotCLI
       when 'help', '-h', '--help' then puts USAGE
       when 'new' then start_session
       when 'review', 'load' then puts 'not yet implemented'
-      when 'reset' then reset_without_session
+      when 'draw' then puts "Start a new reading with 'new' and enter a question before drawing."
+      when 'shuffle' then puts 'No active reading to shuffle.'
       when 'exit', 'quit' then :exit
       else
         unknown_command(command)
@@ -51,13 +52,19 @@ module TarotCLI
     end
 
     def start_session
-      puts 'Enter your intention or question for this session: '
-      Session.new(gets.chomp).run
+      question = prompt_for_question
+      Session.new(question).run if question
     end
 
-    def reset_without_session
-      puts 'No session initiated. Nothing to reset.'
-      :exit
+    def prompt_for_question
+      loop do
+        puts 'Enter your intention or question for this session: '
+        question = gets&.strip
+        return if question.nil?
+        return question unless question.empty?
+
+        puts 'Question cannot be blank.'
+      end
     end
 
     def unknown_command(command)

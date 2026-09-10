@@ -44,12 +44,9 @@ class TestDeck < Minitest::Test
     assert_nil @deck.draw_card
   end
 
-  def test_reset_clears_drawn_cards
+  def test_shuffle_clears_drawn_cards
     @deck.draw_card
-
-    capture_io do
-      @deck.reset
-    end
+    @deck.shuffle
 
     assert_empty @deck.drawn_cards
   end

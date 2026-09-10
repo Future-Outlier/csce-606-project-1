@@ -21,8 +21,7 @@ class Deck
     card
   end
 
-  def reset
-    @drawn_cards = []
-    puts 'Session cleared. Returning to Main Menu...'
+  def shuffle
+    @drawn_cards.clear
   end
 end

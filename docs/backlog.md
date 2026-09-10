@@ -12,7 +12,6 @@
 - Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md
 
 ### Essential Features - Implementation
-- implement shuffle
 - write tests for save session with timestamp
 - implement save session with timestamp
 - write tests for load session
@@ -41,7 +40,7 @@
 
 ## In Progress
 - write tests for usage statement
-- write tests for shuffle
+- implement and test Shuffle (#14)
 
 ## Done
 - write tests for deck
@@ -68,4 +67,3 @@
 - Remove redundant comments per code review (PR #5)
 - Align user stories with approved scope (PR #33)
 - Add story points to each story or feature
-

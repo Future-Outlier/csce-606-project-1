@@ -77,13 +77,14 @@ As a user I want an interpretation based on my question and three cards so that 
 
 **Acceptance Criteria**
 
-Given the user has entered question and drawn two cards,
+Given the user has entered a non-blank question and drawn two cards,
 When the third card is drawn,
 Then the local Qwen runner must receive the question and three cards in draw order once,
+And each card input must include its name and description loaded from `lib/data/cards.json`,
 And the terminal must display the interpretation.
 
-Given the user has entered question and drawn two cards,
-When the local model fails,
+Given the user has entered a non-blank question and drawn two cards,
+When the third draw triggers the local model and it fails,
 Then the system must display a clear error message,
 And the program should not crash or freeze.
 

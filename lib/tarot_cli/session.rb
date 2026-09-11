@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'deck'
+require_relative 'qwen_runner'
 
 module TarotCLI
   class Session
@@ -11,9 +12,10 @@ module TarotCLI
 
     attr_reader :question, :interpretation
 
-    def initialize(question, deck: Deck.new, interpretation: nil)
+    def initialize(question, deck: Deck.new, runner: QwenRunner.new, interpretation: nil)
       @question = question
       @deck = deck
+      @runner = runner
       @interpretation = interpretation
       puts <<~TEXT
         [Session Initialized]
@@ -52,6 +54,11 @@ module TarotCLI
 
       puts 'Drawing card...'
       @deck.draw_card
+      display_spread
+      interpret_spread if @deck.drawn_cards.size == MAX_CARDS
+    end
+
+    def display_spread
       puts LINE
       puts "Current Spread: #{formatted_cards}"
       puts LINE
@@ -59,6 +66,17 @@ module TarotCLI
 
     def missing_question
       puts "Start a new reading with 'new' and enter a question before drawing."
+    end
+
+    def interpret_spread
+      @interpretation = @runner.interpret(
+        question: @question,
+        cards: @deck.drawn_cards.dup
+      )
+      puts 'FINAL INTERPRETATION:'
+      puts @interpretation
+    rescue StandardError => e
+      puts "Interpretation unavailable: #{e.message}"
     end
 
     def shuffle

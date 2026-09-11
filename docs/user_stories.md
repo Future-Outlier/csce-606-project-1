@@ -50,8 +50,9 @@ When they execute the history/review command,
 Then the terminal must display a chronological list of all past readings,
 showing the question, cards in draw order, save time, and available interpretation for each session.
 
-Given the user is viewing their saved readings history,
-Then each entry must explicitly display the date and time (e.g., YYYY-MM-DD HH:MM) of
+Given there is a saved reading,
+When the user views their saved readings history,
+Then they should see the date and time (e.g., YYYY-MM-DD HH:MM) of
 when that specific reading was saved.
 
 ### 4. Save a reading (#15)
@@ -65,8 +66,10 @@ When they execute the save command,
 Then the question, cards in draw order, timestamp, and available interpretation must be saved,
 And the reading must remain available after the application restarts.
 
+Given the user has executed the save command with a valid reading,
 When saving fails,
-Then the system must display a clear error message without crashing.
+Then the system must display a clear error message to the user,
+And the program should not crash or freeze.
 
 ### 5. Ask a question and receive an interpretation (#18)
 
@@ -74,13 +77,15 @@ As a user I want an interpretation based on my question and three cards so that 
 
 **Acceptance Criteria**
 
-Given the user must enter a non-blank question before drawing,
+Given the user has entered question and drawn two cards,
 When the third card is drawn,
 Then the local Qwen runner must receive the question and three cards in draw order once,
 And the terminal must display the interpretation.
 
+Given the user has entered question and drawn two cards,
 When the local model fails,
-Then the system must display a clear error message without crashing.
+Then the system must display a clear error message,
+And the program should not crash or freeze.
 
 ## Optional
 
@@ -95,6 +100,7 @@ When the user requests to see the art for that card,
 Then the terminal must render the visual representation (e.g., ASCII art or a
 text-based layout wrapper) associated with that specific card.
 
+Given a card has been drawn or selected,
 When the user requests the art for an invalid card identifier,
 Then the system must reject the input,
 And display an error message stating: "Could not display art. Invalid card selection."
@@ -111,11 +117,13 @@ When the user requests the details/meaning of that card,
 Then the terminal must print a comprehensive text description of its
 traditional tarot interpretation.
 
+Given a card has been drawn or selected,
 When the user requests details for a card index or name that does not exist in
 the deck (e.g., entering 99 or typing The King of Potatoes),
 Then the system must reject the input,
 And display an error message stating e.g., "Invalid card selection. Please
-select a valid card."
+select a valid card.",
+And the program should not crash or freeze.
 
 ## Essential Sad Path
 
@@ -141,5 +149,7 @@ When they execute the history/review command,
 Then the system must display an informational message stating e.g., "No saved
 readings found."
 
+Given the user has never saved a reading (or the history file is empty),
 When the saved-reading data is malformed,
-Then the system must display a clear error message without crashing.
+Then the system must display a clear error message,
+And the program should not crash or freeze.

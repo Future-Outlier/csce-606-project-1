@@ -37,7 +37,7 @@
 - write tests for usage statement
 - implement and test Shuffle (#14)
 - Write the local Qwen runner API contract (#18; local change awaiting review and merge)
-- Write fake-runner tests for Q&A timing, inputs, output, and failure (#18; local change awaiting CI)
+- Write fake-runner tests for per-draw Q&A timing, cumulative inputs, output, and failure (#18; local change awaiting CI)
 - Implement Q&A with the required local Qwen model (#18; local change awaiting review and merge)
 - Document how to start the required local Qwen server (#18; local change awaiting review and merge)
 

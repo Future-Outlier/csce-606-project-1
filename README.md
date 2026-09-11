@@ -21,7 +21,7 @@ After installation, run the required local model server in a separate terminal:
 llama serve -hf ggml-org/Qwen3.5-0.8B-GGUF
 ```
 
-Wait until the server reports that it is listening before drawing a third card.
+Wait until the server reports that it is listening before drawing any cards.
 
 ## running the app
 
@@ -56,7 +56,7 @@ Coverage reporting is planned for a later PR.
 - Help and usage statement
 - Start a reading with a non-blank question
 - Draw random cards without duplicates in the active reading
-- Display one local Qwen interpretation after the third card is drawn
+- Display an updated local Qwen interpretation after every card is drawn
 - Shuffle all cards back into the deck and return to the main menu
 - Clean exit with `exit`, `quit`, or end-of-input
 

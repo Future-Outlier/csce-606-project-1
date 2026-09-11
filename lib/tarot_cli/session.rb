@@ -53,9 +53,10 @@ module TarotCLI
       end
 
       puts 'Drawing card...'
-      @deck.draw_card
+      return unless @deck.draw_card
+
       display_spread
-      interpret_spread if @deck.drawn_cards.size == MAX_CARDS
+      interpret_spread
     end
 
     def display_spread
@@ -69,11 +70,12 @@ module TarotCLI
     end
 
     def interpret_spread
+      @interpretation = nil
       @interpretation = @runner.interpret(
         question: @question,
         cards: @deck.drawn_cards.dup
       )
-      puts 'FINAL INTERPRETATION:'
+      puts 'INTERPRETATION:'
       puts @interpretation
     rescue StandardError => e
       puts "Interpretation unavailable: #{e.message}"

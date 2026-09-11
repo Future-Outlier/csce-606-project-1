@@ -71,8 +71,23 @@ class QwenRunnerTest < Minitest::Test
     assert_equal 'ggml-org/Qwen3.5-0.8B-GGUF', body['model']
     assert_equal false, body['stream']
     assert_equal false, body.dig('chat_template_kwargs', 'enable_thinking')
-    assert_includes body.dig('messages', 1, 'content'), 'Question: What comes next?'
-    assert_card_order(body.dig('messages', 1, 'content'))
+    assert_messages(body['messages'])
+  end
+
+  def assert_messages(messages)
+    roles = messages.map { |message| message['role'] }
+    assert_equal %w[system user], roles
+    assert_equal expected_system_prompt, messages[0]['content']
+    assert_includes messages[1]['content'], 'Question: What comes next?'
+    assert_card_order(messages[1]['content'])
+  end
+
+  def expected_system_prompt
+    <<~PROMPT.strip
+      You are a tarot reading service. Give a direct answer to the user's question based on the drawn cards.
+      Explain each drawn card exactly once, in draw order, and connect its meaning to the answer.
+      For entertainment only, respond in one plain-text paragraph under 120 words.
+    PROMPT
   end
 
   def assert_card_order(prompt)

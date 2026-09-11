@@ -9,7 +9,7 @@ The document will evolve with implementation and does not block unrelated coding
 - Session
     - displays user interface (?)
     - holds the active question and interpretation
-    - requests one interpretation after the third card is drawn
+    - requests one updated interpretation after every successful draw
     - clears active reading state and returns to the main menu after Shuffle
     - reads and writes from disk to save and load session states
     - handles user commands
@@ -25,7 +25,7 @@ The document will evolve with implementation and does not block unrelated coding
     - has getters to allow Session to retreive data about the card
 
 - QwenRunner
-    - formats the question and three cards in draw order
+    - formats the question and all currently drawn cards in draw order
     - verifies the loaded model, then sends one interpretation request
     - returns the interpretation or a clear runner error
 
@@ -72,19 +72,23 @@ command:
 llama serve -hf ggml-org/Qwen3.5-0.8B-GGUF
 ```
 
-`Session` calls `QwenRunner` once when the third card has been drawn. The runner
-first checks `http://127.0.0.1:8080/v1/models` and rejects a server that did not
-load `ggml-org/Qwen3.5-0.8B-GGUF`. It then sends one non-streaming JSON request to
+After every successful draw, `Session` calls `QwenRunner` exactly once with the
+question and a snapshot of all cards drawn so far. A blank-question attempt or
+rejected fourth draw does not call the runner. The runner first checks
+`http://127.0.0.1:8080/v1/models` and rejects a server that did not load
+`ggml-org/Qwen3.5-0.8B-GGUF`. It then sends one non-streaming JSON request to
 `http://127.0.0.1:8080/v1/chat/completions`. The request contains the user's
-question and a numbered list of the three cards, including their names and
-descriptions, in draw order. The runner returns
-`choices[0].message.content`; `Session` stores and displays it.
+question and a numbered list of the currently drawn cards, including their
+names and descriptions, in draw order. The runner returns
+`choices[0].message.content`; `Session` stores and displays it as the current
+spread's interpretation.
 Thinking output is disabled so the token budget is used for the displayed
 interpretation rather than hidden `reasoning_content`.
 
 A connection error, non-success HTTP response, invalid JSON response, or blank
-interpretation is a runner failure. `Session` displays the error and keeps the
-three-card reading active without retrying or crashing.
+interpretation is a runner failure. `Session` clears the prior interpretation,
+displays the error, and keeps the reading active without retrying the same draw
+or crashing. A later successful draw starts one new interpretation request.
 
 ### save file
 
@@ -153,6 +157,9 @@ Drawing card...
 ------------------------------------------------------------------------
 Current Spread: [ The Tower ]
 ------------------------------------------------------------------------
+INTERPRETATION:
+The Tower points to disruption around your launch. Prepare for sudden changes
+and use them to identify foundations that need to be rebuilt.
 
 Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
 
@@ -162,6 +169,9 @@ Drawing card...
 ------------------------------------------------------------------------
 Current Spread: [ The Tower ] -> [ Three of Wands ]
 ------------------------------------------------------------------------
+INTERPRETATION:
+The Tower's disruption is followed by the Three of Wands, suggesting that
+careful planning and a wider view can turn early launch problems into progress.
 
 Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
 
@@ -175,7 +185,7 @@ Meaning: Fundamental breakdowns, sudden revelation, destruction of
 ==================================================================================
 ```
 
-### example UI: third card and final interpretation
+### example UI: third card interpretation
 ```
 ==================================================================================
 > draw
@@ -184,7 +194,7 @@ Drawing card...
 ------------------------------------------------------------------------
 Current Spread: [ The Tower ] -> [ Three of Wands ] -> [ The World ]
 ------------------------------------------------------------------------
-FINAL INTERPRETATION:
+INTERPRETATION:
 Your journey begins with sudden, sharp technical disruptions (The Tower).
 However, by looking outward and executing a structured expansion plan
 (Three of Wands), your software project will achieve global success and
@@ -237,6 +247,9 @@ Drawing card...
 ------------------------------------------------------------------------
 Current Spread: [ Six of Swords ]
 ------------------------------------------------------------------------
+INTERPRETATION:
+The Six of Swords suggests that relocating may help you leave a difficult
+situation and move toward calmer conditions.
 
 > shuffle
 Session cleared. All cards are available again. Returning to Main Menu...
@@ -261,7 +274,7 @@ Available Commands:
 - User starts the application.
 - User is greeted and prompted to load, review, or start a new session.
 - If the user reviews a session, they will be shown the question, timestamp, cards drawn,
-and the available final interpretation for that session.
+and the latest available interpretation for that session.
 - If there is no session to load/review but the user attempts to load/review,
 they will be shown a fallback message.
 - During a session, the user may Shuffle to return every card to the deck, clear the active
@@ -274,15 +287,16 @@ before the next draw.
 - At any time after submitting their intention/question, the user may save the session.
 - When user has submitted their intention/question, they may start drawing cards.
 - When user draws a card, they are shown the names of the cards they've drawn, in
-order of earliest to latest, from left to right.
+order of earliest to latest, from left to right. The local Qwen runner is called
+once with the question and all cards drawn so far, and the updated interpretation
+is displayed.
 - If user has drawn at least one card, they may request to see details or art of any of the
 drawn cards.
 - If the user requests to see details of one of the drawn cards, they will be shown a
 statement explaining major motifs depicted on the card and their meanings independent of
 the session and question.
-- When the user draws their third card, the local Qwen runner is called once and they are
-shown one final interpretation that takes the question, all three cards, and their order
-into context.
+- When the user draws their third card, the updated interpretation takes the question,
+all three cards, and their order into context.
 - If user has already drawn three cards, they will not be allowed to draw another card.
 They will have the option to save, after which they will be brought back to the main menu.
 
@@ -420,15 +434,15 @@ paid external service, and the grader does not need to pay to evaluate the
 project. The required runner is `QwenRunner`, which calls the OpenAI-compatible
 HTTP endpoint started by
 `llama serve -hf ggml-org/Qwen3.5-0.8B-GGUF`. `Session` injects the runner and
-calls it once after the third card so model I/O remains separate from reading
-state and command handling.
+calls it once after every successful draw so model I/O remains separate from
+reading state and command handling.
 
 #### test plan
 
-Automated tests inject a fake runner to verify call timing, ordered inputs,
-terminal output, and failure handling. Separate unit tests use fake HTTP
-responses to verify the request and response contract. They do not start the
-model, test model feasibility, or evaluate answer quality.
+Automated tests inject a fake runner to verify one call per successful draw,
+cumulative ordered inputs, terminal output, and failure handling. Separate unit
+tests use fake HTTP responses to verify the request and response contract. They
+do not start the model, test model feasibility, or evaluate answer quality.
 
 ### design decision 4
 

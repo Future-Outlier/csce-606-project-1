@@ -85,7 +85,11 @@ module TarotCLI
       [
         {
           role: 'system',
-          content: 'For entertainment, interpret the cards in draw order in one plain-text paragraph under 120 words.'
+          content: <<~PROMPT.strip
+            You are a tarot reading service. Give a direct answer to the user's question based on the drawn cards.
+            Explain each drawn card exactly once, in draw order, and connect its meaning to the answer.
+            For entertainment only, respond in one plain-text paragraph under 120 words.
+          PROMPT
         },
         { role: 'user', content: user_prompt(question, cards) }
       ]

@@ -2,8 +2,9 @@
 
 ## Collaboration
 
-- Pair programming: Draw (#13), empty-save handling (#16), and Qwen interpretation (#18). Switch Driver/Navigator and update `docs/pairing_log.md`.
-- Individual: all other tracked items. Follow the GitHub Project owner and use PR review for non-trivial changes.
+- See the [GitHub Project](https://github.com/users/ianebeckett/projects/1/views/1) for each item's Owner and Work mode.
+- Individual: follow the assigned owner and use PR review for non-trivial changes.
+- Pair programming: switch Driver/Navigator roles and update `docs/pairing_log.md`.
 
 5 Sep 2026
 

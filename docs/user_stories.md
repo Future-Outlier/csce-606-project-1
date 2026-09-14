@@ -71,7 +71,24 @@ When saving fails,
 Then the system must display a clear error message to the user,
 And the program should not crash or freeze.
 
-### 5. Ask a question and receive an interpretation (#18)
+### 5. Load a reading (#62)
+
+As a user I want to load a saved reading so I can continue my session.
+
+**Acceptance Criteria**
+
+Given the file has a saved reading,
+When the users executes the load command,
+Then the session state should be restored,
+And the user should see the current state of the reading,
+And the user may continue the session.
+
+Given the user has executed the load command with a valid reading,
+When loading fails,
+Then the system must display a clear error message to the user,
+And the program should not crash or freeze.
+
+### 6. Ask a question and receive an interpretation (#18)
 
 As a user I want an updated interpretation after each card I draw so that the reading addresses my intent as it develops.
 
@@ -92,7 +109,7 @@ And the program should not crash or freeze.
 
 ## Optional
 
-### 6. View card ASCII art (#24)
+### 7. View card ASCII art (#24)
 
 As a user I want to view ASCII art of the cards so that I can visualize them.
 
@@ -108,7 +125,7 @@ When the user requests the art for an invalid card identifier,
 Then the system must reject the input,
 And display an error message stating: "Could not display art. Invalid card selection."
 
-### 7. Describe a card (#23)
+### 8. Describe a card (#23)
 
 As a user I want to read detailed descriptions of the cards so that I can
 consider their meanings.
@@ -130,7 +147,7 @@ And the program should not crash or freeze.
 
 ## Essential Sad Path
 
-### 8. Prevent saving an empty reading (#16)
+### 9. Prevent saving an empty reading (#16)
 
 As a user I want to be prevented from saving empty readings so I can
 keep my record tidy.

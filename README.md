@@ -1,5 +1,7 @@
 # tarot-cli
 
+A terminal tarot app for drawing cards and receiving local Qwen interpretations.
+
 ## installation/setup instructions
 
 Before starting `tarot-cli`, install Ruby 4.0.1, `llama.cpp`, and the project
@@ -48,7 +50,7 @@ download or start the local model.
 
 ## generating coverage reports
 
-Coverage reporting is planned for a later PR.
+Run `bundle exec rake test`. SimpleCov writes the report to `coverage/index.html`.
 
 ## list of main features
 

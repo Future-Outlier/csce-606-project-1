@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'deck'
+require_relative 'qwen_runner'
 require_relative 'reading_store'
 
 module TarotCLI
@@ -13,9 +14,10 @@ module TarotCLI
     attr_reader :question, :interpretation
 
     # Keep the active reading and its save destination together for this session.
-    def initialize(question, deck: Deck.new, interpretation: nil, save_path: ReadingStore::DEFAULT_PATH)
+    def initialize(question, deck: Deck.new, runner: QwenRunner.new, interpretation: nil, save_path: ReadingStore::DEFAULT_PATH)
       @question = question
       @deck = deck
+      @runner = runner
       @interpretation = interpretation
       @reading_store = ReadingStore.new(path: save_path)
       puts <<~TEXT
@@ -75,7 +77,13 @@ module TarotCLI
       end
 
       puts 'Drawing card...'
-      @deck.draw_card
+      return unless @deck.draw_card
+
+      display_spread
+      interpret_spread
+    end
+
+    def display_spread
       puts LINE
       puts "Current Spread: #{formatted_cards}"
       puts LINE
@@ -83,6 +91,18 @@ module TarotCLI
 
     def missing_question
       puts "Start a new reading with 'new' and enter a question before drawing."
+    end
+
+    def interpret_spread
+      @interpretation = nil
+      @interpretation = @runner.interpret(
+        question: @question,
+        cards: @deck.drawn_cards.dup
+      )
+      puts 'INTERPRETATION:'
+      puts @interpretation
+    rescue StandardError => e
+      puts "Interpretation unavailable: #{e.message}"
     end
 
     def shuffle

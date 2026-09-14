@@ -25,4 +25,15 @@
 - Han-Ju claimed the LLM interop portion of the design
 
 ### Notes:
+- none
 
+## Session 3 - 11 Sep 2026
+
+### Driver: Han-Ju
+### Navigator: Ian
+
+### Work Completed:
+- Implemented local interpretation
+
+### Notes:
+- We decided to do one interpretation per draw instead of only at the end.

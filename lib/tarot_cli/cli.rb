@@ -16,8 +16,9 @@ module TarotCLI
     TEXT
 
     # Use one history file across readings while allowing tests to choose a temporary path.
-    def initialize(save_path: ReadingStore::DEFAULT_PATH)
+    def initialize(runner: QwenRunner.new, save_path: ReadingStore::DEFAULT_PATH)
       @save_path = save_path
+      @runner = runner
     end
 
     def run(arguments = [])

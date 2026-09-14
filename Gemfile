@@ -5,3 +5,4 @@ ruby '4.0.1'
 gem 'minitest', '~> 6.0'
 gem 'rake', '~> 13.3'
 gem 'rubocop', require: false
+gem 'simplecov', '~> 0.22', require: false

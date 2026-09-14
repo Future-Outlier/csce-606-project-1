@@ -51,6 +51,7 @@ download or start the local model.
 ## generating coverage reports
 
 Run `bundle exec rake test`. SimpleCov writes the report to `coverage/index.html`.
+View the report by opening the file with a web browser.
 
 ## list of main features
 

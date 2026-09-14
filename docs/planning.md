@@ -1,5 +1,10 @@
 # planning sessions
 
+## Collaboration
+
+- Pair programming: Draw (#13), empty-save handling (#16), and Qwen interpretation (#18). Switch Driver/Navigator and update `docs/pairing_log.md`.
+- Individual: all other tracked items. Follow the GitHub Project owner and use PR review for non-trivial changes.
+
 5 Sep 2026
 
 ## AI Plan

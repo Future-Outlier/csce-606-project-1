@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
+require 'test_helper'
 require_relative '../../lib/tarot_cli/session'
 
 class SessionDrawTest < Minitest::Test

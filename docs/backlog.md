@@ -4,20 +4,15 @@
 
 ### Planning and Design
 - design UI for review
-- write database/JSON schema for session
 
 ### Pair Programming
-- Perform one (1) additional pair programming session with alternating roles (2 of 4 required). Document in docs/pairing_log.md
-- Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md
+- Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md. Session 3 is complete; Session 4 remains.
 
 ### Essential Features - Implementation
-- write tests for save session with timestamp
-- implement save session with timestamp
 - write tests for load session
 - implement load session, allowing tests to inject other filepaths
 - write tests for review
 - implement review
-- implement test coverage reports
 
 ### Optional Features - Implementation
 - Create ASCII art
@@ -29,27 +24,30 @@
 - implement card description feature
 
 ### Final Deliverables
-- write docs/README.md
-- perform and document retrospective
 - finalize docs/design.md
 
 ## In Progress
-- write tests for usage statement
-- implement and test Shuffle (#14)
-- Write the local Qwen runner API contract (#18; local change awaiting review and merge)
-- Write fake-runner tests for per-draw Q&A timing, cumulative inputs, output, and failure (#18; local change awaiting CI)
-- Implement Q&A with the required local Qwen model (#18; local change awaiting review and merge)
-- Document how to start the required local Qwen server (#18; local change awaiting review and merge)
+- write tests for save session with timestamp (#15)
+- implement save session with timestamp (#15)
+- implement test coverage reports (#25, PR #58)
+- write README.md (#26, PR #59; previously listed as docs/README.md)
 
 ## Done
 - write tests for deck
 - write tests for card draw
 - Clarify the readings.json schema
+- write database/JSON schema for session
 - Add Architecture diagram or brief module explanation in docs/design.md (currently minimal)
 - design UI for session
 - implement usage statement
+- write tests for usage statement
 - implement deck
 - implement card draw
+- implement and test Shuffle (#14)
+- Write the local Qwen runner API contract (#18; merged in PR #56)
+- Write fake-runner tests for per-draw Q&A timing, cumulative inputs, output, and failure (#18; CI passed in PR #56)
+- Implement Q&A with the required local Qwen model (#18; merged in PR #56)
+- Document how to start the required local Qwen server (#18; merged in PR #56)
 - Define features and scope for project approval (Completed - see PR #33)
 - align user stories and acceptance criteria in docs/user_stories.md
 - Setup GitHub Actions for running tests
@@ -61,6 +59,8 @@
 - create docs
 - create repository
 - Perform first (1 of 4) pair programming session with alternating roles and document in docs/pairing_log.md
+- Perform one (1) additional pair programming session with alternating roles (2 of 4 required). Document in docs/pairing_log.md
+- perform and document retrospective (#42)
 - Add CLI foundation and tests (PR #3)
 - Add GitHub Actions for CI (PR #4)
 - Remove redundant comments per code review (PR #5)

@@ -67,10 +67,10 @@ module TarotCLI
       end
     end
 
-    # Every new reading shares the CLI's chosen save destination.
+    # Carry the chosen runner and save destination into every new reading.
     def start_session
       question = prompt_for_question
-      Session.new(question, save_path: @save_path).run if question
+      Session.new(question, runner: @runner, save_path: @save_path).run if question
     end
 
     def prompt_for_question

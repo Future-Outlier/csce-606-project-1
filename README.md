@@ -47,7 +47,7 @@ you launched the app and return to the main menu.
 
 The file keeps earlier readings across app restarts. Each entry includes an integer
 `ID`, an ISO 8601 UTC `saved_at` timestamp, the question, card names in draw order,
-and the available interpretation (currently an empty string). See
+and the latest available interpretation (an empty string if interpretation failed). See
 [`docs/design.md`](docs/design.md#save-file) for the JSON format.
 
 Saving an empty reading is rejected. If saving fails, the app reports the error and

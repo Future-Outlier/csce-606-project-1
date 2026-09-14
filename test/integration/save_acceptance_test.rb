@@ -10,6 +10,7 @@ require 'rbconfig'
 
 class SaveAcceptanceTest < Minitest::Test
   EXECUTABLE = File.expand_path('../../bin/tarot', __dir__)
+  FAKE_RUNNER = File.expand_path('../support/fake_qwen_runner.rb', __dir__)
 
   def setup
     @directory = Dir.mktmpdir('tarot-save-acceptance-test')
@@ -28,7 +29,8 @@ class SaveAcceptanceTest < Minitest::Test
     assert_includes output, 'Usage: tarot [command]'
     assert_equal 'My question', reading['question']
     assert_equal drawn_cards(output), reading['cards']
-    assert_equal '', reading['interpretation']
+    assert_equal "Test interpretation for My question: #{reading['cards'].join(', ')}", reading['interpretation']
+    assert_includes output, reading['interpretation']
   end
 
   def test_saves_three_cards_in_the_displayed_order
@@ -78,7 +80,9 @@ class SaveAcceptanceTest < Minitest::Test
   private
 
   def run_cli(input)
-    output, error, status = Open3.capture3(RbConfig.ruby, EXECUTABLE, stdin_data: input, chdir: @directory)
+    output, error, status = Open3.capture3(
+      RbConfig.ruby, '-r', FAKE_RUNNER, EXECUTABLE, stdin_data: input, chdir: @directory
+    )
     assert status.success?, error
     assert_empty error
     output

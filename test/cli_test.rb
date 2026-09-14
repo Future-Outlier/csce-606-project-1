@@ -3,6 +3,19 @@ require 'test_helper'
 require 'tarot_cli/cli'
 
 class CLITest < Minitest::Test
+  class FakeRunner
+    attr_reader :questions
+
+    def initialize
+      @questions = []
+    end
+
+    def interpret(question:, cards:)
+      @questions << question
+      "Injected interpretation for #{question}: #{cards.map(&:name).join(', ')}"
+    end
+  end
+
   def test_help_displays_usage
     _status, output = run_cli("help\nexit\n")
 
@@ -54,13 +67,24 @@ class CLITest < Minitest::Test
     assert_equal 0, status
   end
 
+  def test_new_readings_use_the_injected_runner
+    runner = FakeRunner.new
+    input = "new\nFirst question\ndraw\nshuffle\nnew\nSecond question\ndraw\nshuffle\nexit\n"
+    status, output = run_cli(input, runner: runner)
+
+    assert_equal 0, status
+    assert_equal ['First question', 'Second question'], runner.questions
+    assert_includes output, 'Injected interpretation for First question:'
+    assert_includes output, 'Injected interpretation for Second question:'
+  end
+
   private
 
-  def run_cli(input, arguments = [])
+  def run_cli(input, arguments = [], runner: FakeRunner.new)
     original_stdin = $stdin
     $stdin = StringIO.new(input)
     status = nil
-    output, = capture_io { status = TarotCLI::CLI.new.run(arguments) }
+    output, = capture_io { status = TarotCLI::CLI.new(runner: runner).run(arguments) }
     [status, output]
   ensure
     $stdin = original_stdin

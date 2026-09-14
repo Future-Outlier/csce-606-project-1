@@ -7,6 +7,12 @@ require 'fileutils'
 require 'tarot_cli/session'
 
 class SessionSaveTest < Minitest::Test
+  class FakeRunner
+    def interpret(question:, cards:)
+      "Test interpretation for #{question}: #{cards.map(&:name).join(', ')}"
+    end
+  end
+
   def setup
     @directory = Dir.mktmpdir('tarot-session-save-test')
     @path = File.join(@directory, 'readings.json')
@@ -84,7 +90,9 @@ class SessionSaveTest < Minitest::Test
   def build_session(question = 'Question')
     session = nil
     capture_io do
-      session = TarotCLI::Session.new(question, deck: @deck, interpretation: 'An interpretation', save_path: @path)
+      session = TarotCLI::Session.new(
+        question, deck: @deck, runner: FakeRunner.new, interpretation: 'An interpretation', save_path: @path
+      )
     end
     session
   end

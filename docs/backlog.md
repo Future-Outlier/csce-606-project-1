@@ -4,7 +4,6 @@
 
 ### Planning and Design
 - design UI for review
-- write database/JSON schema for session
 - write API contract for interaction with local Qwen model
 
 ### Pair Programming
@@ -12,8 +11,6 @@
 - Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md
 
 ### Essential Features - Implementation
-- write tests for save session with timestamp
-- implement save session with timestamp
 - write tests for load session
 - implement load session, allowing tests to inject other filepaths
 - write tests for review
@@ -43,9 +40,12 @@
 - implement and test Shuffle (#14)
 
 ## Done
+- implement save session with timestamp (#15, #16), including empty-reading rejection
+  and recoverable save errors
+- write unit and CLI acceptance tests for saving, ordered cards, failed saves, and restart persistence
 - write tests for deck
 - write tests for card draw
-- Clarify the readings.json schema
+- Clarify and implement the readings.json schema in docs/design.md
 - Add Architecture diagram or brief module explanation in docs/design.md (currently minimal)
 - design UI for session
 - implement usage statement

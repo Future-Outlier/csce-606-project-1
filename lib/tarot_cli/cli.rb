@@ -15,6 +15,11 @@ module TarotCLI
         exit, quit        Exit tarot-cli
     TEXT
 
+    # Use one history file across readings while allowing tests to choose a temporary path.
+    def initialize(save_path: ReadingStore::DEFAULT_PATH)
+      @save_path = save_path
+    end
+
     def run(arguments = [])
       unless arguments.empty?
         result = execute(arguments.join(' '))
@@ -38,12 +43,13 @@ module TarotCLI
       execute_command(command) unless command.empty?
     end
 
+    # Main-menu commands must guide users who try to save without an active reading.
     def execute_command(command)
       case command
       when 'help', '-h', '--help' then puts USAGE
       when 'new' then start_session
       when 'review', 'load' then puts 'not yet implemented'
-      when 'draw' then puts "Start a new reading with 'new' and enter a question before drawing."
+      when 'draw', 'save' then missing_reading(command)
       when 'shuffle' then puts 'No active reading to shuffle.'
       when 'exit', 'quit' then :exit
       else
@@ -51,9 +57,19 @@ module TarotCLI
       end
     end
 
+    # Explain how to start a reading when a session-only command is used at the menu.
+    def missing_reading(command)
+      if command == 'save'
+        puts 'Cannot save an empty reading. Please start a new reading and draw cards first.'
+      else
+        puts "Start a new reading with 'new' and enter a question before drawing."
+      end
+    end
+
+    # Every new reading shares the CLI's chosen save destination.
     def start_session
       question = prompt_for_question
-      Session.new(question).run if question
+      Session.new(question, save_path: @save_path).run if question
     end
 
     def prompt_for_question

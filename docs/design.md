@@ -10,8 +10,14 @@ The document will evolve with implementation and does not block unrelated coding
     - displays user interface (?)
     - holds the active question and interpretation
     - clears active reading state and returns to the main menu after Shuffle
-    - reads and writes from disk to save and load session states
+    - delegates saving to ReadingStore; loading session states is planned
     - handles user commands
+
+- ReadingStore
+    - appends reading snapshots to `readings.json`
+    - assigns integer IDs and ISO 8601 save times
+    - checks existing history before replacing it with a complete updated file
+    - reports storage errors to Session, which keeps the active reading available
 
 - Deck
     - handles "shuffling" the deck
@@ -59,19 +65,48 @@ The document will evolve with implementation and does not block unrelated coding
 
 ### save file
 
+The implemented save flow separates session commands from file I/O:
+
+```text
+User -> CLI -> Session --question, ordered card names, interpretation--> ReadingStore
+                  |                                                        |
+                  +--> Deck.drawn_cards --> Card.name                       v
+                                                                     readings.json
+```
+
 #### format
 ```json
-{"readings": [
-    ID: Integer,
-    saved_at: String (ISO 8601),
-    question: String,
-    cards: String[],
-    interpretation: String,
-]}
+{
+  "readings": [
+    {
+      "ID": 1,
+      "saved_at": "2026-09-13T12:00:00Z",
+      "question": "What should I focus on?",
+      "cards": ["The Tower", "Three of Wands", "The World"],
+      "interpretation": ""
+    }
+  ]
+}
 ```
+
+- `ID` is an integer starting at 1. New saves use the highest existing ID plus 1.
+- `saved_at` is the UTC save time as an ISO 8601 string.
+- `question` and `interpretation` are strings. An unavailable interpretation is `""`.
+- `cards` contains card names as strings, in draw order.
+- The default file is `readings.json` in the directory where the app is launched.
+  `CLI` and `Session` accept `save_path:` for an alternate destination, including tests.
+- Each save appends a snapshot to the existing `readings` array, including after a restart.
+  A missing file starts a new history; an existing `{"readings": []}` is also valid.
+- The updated JSON is written to a temporary file in the same directory, flushed,
+  and renamed over the destination only when complete.
+- A successful save returns to the main menu. A failed save preserves the active
+  question, cards, and interpretation so the user can continue or retry.
 
 #### sad paths
 - save fails: notify the user without crashing, then allow more commands
+- save without a question or any drawn cards: reject the save without creating a file
+- existing save file is blank, malformed, or has invalid field types or duplicate IDs:
+  report a save error and leave the file unchanged
 - load missing file: notify the user without crashing, then allow more commands
 - blank file or load missing save: notify the user without crashing, then allow more commands
 
@@ -258,7 +293,9 @@ before the next draw.
 - The user may not review a session while they are currently in a session. They must
   Shuffle before they can review other sessions.
 - When user starts a new session, they are prompted to submit an intention/question.
-- At any time after submitting their intention/question, the user may save the session.
+- After submitting their intention/question and drawing at least one card, the user may
+  save the session. This follows stories #15 and #16; the earlier workflow allowed saving
+  before drawing, which conflicted with the explicit empty-reading rejection criterion.
 - When user has submitted their intention/question, they may start drawing cards.
 - When user draws a card, they are shown the names of the cards they've drawn, in
 order of earliest to latest, from left to right. They are also shown an

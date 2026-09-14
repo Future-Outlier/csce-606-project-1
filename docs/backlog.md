@@ -23,9 +23,6 @@
 - write tests for card description
 - implement card description feature
 
-### Tests and Coverage
-- add integration tests for ReadingStore and QwenRunner, reaching at least 80% line coverage in each file
-
 ### Final Deliverables
 - finalize docs/design.md
 
@@ -36,6 +33,8 @@
 - write README.md (#26, PR #59; previously listed as docs/README.md)
 
 ## Done
+- add integration tests for ReadingStore and QwenRunner, reaching 100% and 94% line coverage,
+  respectively, in the isolated integration suite
 - repair runner forwarding after the Save/Qwen merge and isolate save tests from the model server
 - implement save session with timestamp (#15, #16), including empty-reading rejection
   and recoverable save errors

@@ -33,6 +33,12 @@
 - write README.md (#26, PR #59; previously listed as docs/README.md)
 
 ## Done
+- add integration tests for ReadingStore and QwenRunner, reaching 100% and 94% line coverage,
+  respectively, in the isolated integration suite
+- repair runner forwarding after the Save/Qwen merge and isolate save tests from the model server
+- implement save session with timestamp (#15, #16), including empty-reading rejection
+  and recoverable save errors
+- write unit and CLI acceptance tests for saving, ordered cards, failed saves, and restart persistence
 - write tests for deck
 - write tests for card draw
 - Clarify the readings.json schema
@@ -60,7 +66,7 @@
 - create repository
 - Perform first (1 of 4) pair programming session with alternating roles and document in docs/pairing_log.md
 - Perform one (1) additional pair programming session with alternating roles (2 of 4 required). Document in docs/pairing_log.md
-- perform and document retrospective (#42)
+- perform and document end project retrospective (#42)
 - Add CLI foundation and tests (PR #3)
 - Add GitHub Actions for CI (PR #4)
 - Remove redundant comments per code review (PR #5)

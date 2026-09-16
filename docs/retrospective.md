@@ -1,3 +1,5 @@
+Sep 14. Midterm retro
+
 What went well
 1. the timeline is good
 2. use feature branch
@@ -10,3 +12,4 @@ What the pair would improve next time
 
 Whether the final app met the original goal
 1. so far yes
+

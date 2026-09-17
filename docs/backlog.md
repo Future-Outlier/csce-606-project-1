@@ -28,11 +28,11 @@
 
 ## In Progress
 - write tests for save session with timestamp (#15)
-- implement save session with timestamp (#15)
-- implement test coverage reports (#25, PR #58)
-- write README.md (#26, PR #59; previously listed as docs/README.md)
+- finalize README.md (#26, PR #59; previously listed as docs/README.md)
 
 ## Done
+- implement save session with timestamp (#15)
+- implement test coverage reports (#25, PR #58)
 - add integration tests for ReadingStore and QwenRunner, reaching 100% and 94% line coverage,
   respectively, in the isolated integration suite
 - repair runner forwarding after the Save/Qwen merge and isolate save tests from the model server

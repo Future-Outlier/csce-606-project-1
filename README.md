@@ -81,7 +81,12 @@ View the report by opening the file with a web browser.
 
 ## known limitations
 
-- Load, Review, and card details are not implemented yet.
+- Load, Review, card details, and card ASCII art are not implemented yet.
+- `help`, `exit`, and `quit` are treated as question text at the question prompt
+  and ignored during an active reading ([#64](https://github.com/ianebeckett/csce-606-project-1/issues/64),
+  [#65](https://github.com/ianebeckett/csce-606-project-1/issues/65)). During a reading,
+  use `save` after drawing to keep it, or `shuffle` to discard it and return to
+  the main menu. End-of-input also exits without saving.
 - Interpretation requires `ggml-org/Qwen3.5-0.8B-GGUF` at `http://127.0.0.1:8080`.
 
 ## team member names

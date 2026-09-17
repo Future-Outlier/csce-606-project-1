@@ -6,8 +6,13 @@ The document will evolve with implementation and does not block unrelated coding
 
 ### classes
 
+- CLI
+    - owns the main-menu loop, shared runner, and save-file path
+    - prompts for a non-blank question and creates each Session
+    - currently prints placeholders for Review and Load
+
 - Session
-    - displays user interface (?)
+    - displays the active reading and handles its command loop
     - holds the active question and interpretation
     - requests one updated interpretation after every successful draw
     - clears active reading state and returns to the main menu after Shuffle
@@ -36,7 +41,7 @@ The document will evolve with implementation and does not block unrelated coding
     - returns the interpretation or a clear runner error
 
 ### dataflow diagram
-```
+```text
 ==================================================================================
          +────────────────────────────────────────────────────────────────────────+
          │                         USER TERMINAL                                  │

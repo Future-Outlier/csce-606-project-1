@@ -2,7 +2,7 @@
 
 ## Usage guidance
 
-The following guidance supports the app but is not one of the eight graded stories.
+The following guidance supports the app but is not one of the graded stories.
 
 As a user I want to be shown usage instructions so I can effectively use the application.
 

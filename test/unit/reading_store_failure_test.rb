@@ -33,9 +33,11 @@ class ReadingStoreFailureTest < Minitest::Test
     save_reading
     reading = JSON.parse(File.read(@path))['readings'].first
     invalid_fields = { 'ID' => '1', 'saved_at' => nil, 'question' => nil,
+                       'invalid_saved_at' => 'not-a-timestamp',
                        'cards' => [123], 'interpretation' => nil }
     invalid_fields.each do |key, value|
-      assert_rejected_history(JSON.generate('readings' => [reading.merge(key => value)]))
+      record = key == 'invalid_saved_at' ? reading.merge('saved_at' => value) : reading.merge(key => value)
+      assert_rejected_history(JSON.generate('readings' => [record]))
     end
   end
 

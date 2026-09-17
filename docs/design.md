@@ -9,7 +9,7 @@ The document will evolve with implementation and does not block unrelated coding
 - CLI
     - owns the main-menu loop, shared runner, and save-file path
     - prompts for a non-blank question and creates each Session
-    - currently prints placeholders for Review and Load
+    - renders Review history sorted by `saved_at`, newest first; Load remains a placeholder
 
 - Session
     - displays the active reading and handles its command loop
@@ -129,6 +129,8 @@ User -> CLI -> Session --question, ordered card names, interpretation--> Reading
 
 - `ID` is an integer starting at 1. New saves use the highest existing ID plus 1.
 - `saved_at` is the UTC save time as an ISO 8601 string.
+- Review sorts validated `saved_at` timestamps in descending order, so the most
+  recently saved reading appears first even if the JSON array is not ordered.
 - `question` and `interpretation` are strings. An unavailable interpretation is `""`.
 - `cards` contains card names as strings, in draw order.
 - The default file is `readings.json` in the directory where the app is launched.
@@ -435,6 +437,46 @@ import states to/from Session.
 #### test plan
 
 an end-to-end test
+
+### design decision 5
+
+#### motivation
+
+Returning users usually want to see their latest reading first. We had always
+intended that behavior, but had not written it down explicitly until implementing
+the Review feature.
+
+#### solution 1
+
+Display records in the order they appear in `readings.json`.
+
+##### pros:
+- preserves the file's original order
+
+##### cons:
+- does not guarantee that the newest timestamp appears first if records are reordered
+
+#### solution 2
+
+Sort valid records by their ISO 8601 `saved_at` timestamp in descending order before display.
+
+##### pros:
+- directly guarantees the most recent reading appears first
+- keeps file storage order independent from presentation order
+
+##### cons:
+- requires timestamps to be valid ISO 8601 values
+
+#### decision
+
+Use solution 2. `ReadingStore` rejects timestamps that cannot be parsed, and the
+CLI sorts valid timestamps newest first while leaving the stored JSON order unchanged.
+
+#### test plan
+
+The acceptance suite supplies readings whose file order differs from timestamp order
+and verifies that Review displays the newer reading first. Unit coverage verifies that
+an invalid timestamp is rejected as malformed history.
 
 ### design decision 3
 

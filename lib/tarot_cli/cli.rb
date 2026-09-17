@@ -98,7 +98,7 @@ module TarotCLI
       readings = ReadingStore.new(path: @save_path).readings
       return puts 'No saved readings found.' if readings.empty?
 
-      readings.reverse_each.with_index do |reading, index|
+      readings.sort_by { |reading| Time.iso8601(reading['saved_at']) }.reverse_each.with_index do |reading, index|
         display_reading(reading, index)
       end
     rescue ReadingStore::Error => e

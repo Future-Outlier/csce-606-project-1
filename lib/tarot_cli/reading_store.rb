@@ -24,6 +24,13 @@ module TarotCLI
       raise Error, e.message
     end
 
+    # Return saved readings in their original save order for the review command.
+    def readings
+      read_history['readings']
+    rescue SystemCallError, IOError, JSON::JSONError => e
+      raise Error, e.message
+    end
+
     private
 
     # Card names stay in draw order, and unavailable interpretation is an empty string.

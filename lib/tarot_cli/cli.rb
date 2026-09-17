@@ -15,6 +15,14 @@ module TarotCLI
         exit, quit        Exit tarot-cli
     TEXT
 
+    COMMAND_HANDLERS = {
+      'help' => :show_usage, '-h' => :show_usage, '--help' => :show_usage,
+      'new' => :start_session, 'review' => :review_readings,
+      'load' => :show_load_placeholder, 'draw' => :show_draw_without_reading,
+      'save' => :show_save_without_reading, 'shuffle' => :show_shuffle_without_reading,
+      'exit' => :exit, 'quit' => :exit
+    }.freeze
+
     # Use one history file across readings while allowing tests to choose a temporary path.
     def initialize(runner: QwenRunner.new, save_path: ReadingStore::DEFAULT_PATH)
       @save_path = save_path
@@ -46,16 +54,34 @@ module TarotCLI
 
     # Main-menu commands must guide users who try to save without an active reading.
     def execute_command(command)
-      case command
-      when 'help', '-h', '--help' then puts USAGE
-      when 'new' then start_session
-      when 'review', 'load' then puts 'not yet implemented'
-      when 'draw', 'save' then missing_reading(command)
-      when 'shuffle' then puts 'No active reading to shuffle.'
-      when 'exit', 'quit' then :exit
-      else
-        unknown_command(command)
-      end
+      handler = COMMAND_HANDLERS[command]
+      return :exit if handler == :exit
+      return send(handler) if handler
+
+      unknown_command(command)
+    end
+
+    # Print the same command guidance used by the help flags.
+    def show_usage
+      puts USAGE
+    end
+
+    # Keep Load visibly planned until its session restoration contract is implemented.
+    def show_load_placeholder = puts 'not yet implemented'
+
+    # Explain why drawing must begin from a new reading.
+    def show_draw_without_reading
+      missing_reading('draw')
+    end
+
+    # Explain why saving requires an active reading.
+    def show_save_without_reading
+      missing_reading('save')
+    end
+
+    # Explain why there is no deck state to shuffle at the main menu.
+    def show_shuffle_without_reading
+      puts 'No active reading to shuffle.'
     end
 
     # Explain how to start a reading when a session-only command is used at the menu.
@@ -65,6 +91,30 @@ module TarotCLI
       else
         puts "Start a new reading with 'new' and enter a question before drawing."
       end
+    end
+
+    # Show every saved reading while keeping storage failures inside the CLI loop.
+    def review_readings
+      readings = ReadingStore.new(path: @save_path).readings
+      return puts 'No saved readings found.' if readings.empty?
+
+      readings.reverse_each.with_index do |reading, index|
+        display_reading(reading, index)
+      end
+    rescue ReadingStore::Error => e
+      puts "Could not review saved readings: #{e.message}"
+    end
+
+    # Render one reading record
+    def display_reading(reading, index)
+      puts <<~TEXT
+        Reading #{index + 1} (ID: #{reading['ID']})
+        Saved at: #{reading['saved_at']}
+        Question: #{reading['question']}
+        Cards: #{reading['cards'].join(' -> ')}
+        Interpretation: #{reading['interpretation']}
+
+      TEXT
     end
 
     # Carry the chosen runner and save destination into every new reading.

@@ -92,7 +92,9 @@ class SessionInterpretationTest < Minitest::Test
   end
 
   def assert_no_call_on_fourth_draw(session, runner)
-    capture_io { session.execute('draw') }
+    output, = capture_io { session.execute('draw') }
     assert_equal 3, runner.calls.size
+    assert_equal 3, @deck.drawn_cards.size
+    assert_match(/shuffle/i, output)
   end
 end

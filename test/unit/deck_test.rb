@@ -15,6 +15,7 @@ class TestDeck < Minitest::Test
     assert_empty @deck.drawn_cards
 
     first_draw = @deck.draw_card
+    assert_instance_of Card, first_draw
     assert_equal 1, @deck.drawn_cards.size
     assert_includes @deck.drawn_cards, first_draw
 

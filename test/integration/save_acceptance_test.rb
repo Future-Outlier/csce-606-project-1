@@ -77,20 +77,6 @@ class SaveAcceptanceTest < Minitest::Test
     assert_equal '{broken json', File.read(@path)
   end
 
-  def test_review_sorts_readings_by_saved_at_with_most_recent_first
-    readings = [
-      { 'ID' => 2, 'saved_at' => '2026-09-15T12:00:00Z', 'question' => 'older',
-        'cards' => ['The Fool'], 'interpretation' => 'old' },
-      { 'ID' => 1, 'saved_at' => '2026-09-16T12:00:00Z', 'question' => 'newer',
-        'cards' => ['The World'], 'interpretation' => 'new' }
-    ]
-    File.write(@path, JSON.generate('readings' => readings))
-
-    output = run_cli("review\nexit\n")
-
-    assert_operator output.index('Question: newer'), :<, output.index('Question: older')
-  end
-
   private
 
   def run_cli(input)

@@ -438,46 +438,6 @@ import states to/from Session.
 
 an end-to-end test
 
-### design decision 5
-
-#### motivation
-
-Returning users usually want to see their latest reading first. We had always
-intended that behavior, but had not written it down explicitly until implementing
-the Review feature.
-
-#### solution 1
-
-Display records in the order they appear in `readings.json`.
-
-##### pros:
-- preserves the file's original order
-
-##### cons:
-- does not guarantee that the newest timestamp appears first if records are reordered
-
-#### solution 2
-
-Sort valid records by their ISO 8601 `saved_at` timestamp in descending order before display.
-
-##### pros:
-- directly guarantees the most recent reading appears first
-- keeps file storage order independent from presentation order
-
-##### cons:
-- requires timestamps to be valid ISO 8601 values
-
-#### decision
-
-Use solution 2. `ReadingStore` rejects timestamps that cannot be parsed, and the
-CLI sorts valid timestamps newest first while leaving the stored JSON order unchanged.
-
-#### test plan
-
-The acceptance suite supplies readings whose file order differs from timestamp order
-and verifies that Review displays the newer reading first. Unit coverage verifies that
-an invalid timestamp is rejected as malformed history.
-
 ### design decision 3
 
 #### motivation
@@ -568,3 +528,43 @@ We chose one JSON file because it avoids per-card paths and file checks.
 #### test plan
 
 an end-to-end test
+
+### design decision 5
+
+#### motivation
+
+Returning users usually want to see their latest reading first. We had always
+intended that behavior, but had not written it down explicitly until implementing
+the Review feature.
+
+#### solution 1
+
+Display records in the order they appear in `readings.json`.
+
+##### pros:
+- preserves the file's original order
+
+##### cons:
+- does not guarantee that the newest timestamp appears first if records are reordered
+
+#### solution 2
+
+Sort valid records by their ISO 8601 `saved_at` timestamp in descending order before display.
+
+##### pros:
+- directly guarantees the most recent reading appears first
+- keeps file storage order independent from presentation order
+
+##### cons:
+- requires timestamps to be valid ISO 8601 values
+
+#### decision
+
+Use solution 2. `ReadingStore` rejects timestamps that cannot be parsed, and the
+CLI sorts valid timestamps newest first while leaving the stored JSON order unchanged.
+
+#### test plan
+
+The acceptance suite supplies readings whose file order differs from timestamp order
+and verifies that Review displays the newer reading first. Unit coverage verifies that
+an invalid timestamp is rejected as malformed history.

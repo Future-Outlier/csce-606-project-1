@@ -98,17 +98,17 @@ module TarotCLI
       readings = ReadingStore.new(path: @save_path).readings
       return puts 'No saved readings found.' if readings.empty?
 
-      readings.sort_by { |reading| Time.iso8601(reading['saved_at']) }.reverse_each.with_index do |reading, index|
-        display_reading(reading, index)
+      readings.sort_by { |reading| Time.iso8601(reading['saved_at']) }.reverse_each do |reading|
+        display_reading(reading)
       end
     rescue ReadingStore::Error => e
       puts "Could not review saved readings: #{e.message}"
     end
 
     # Render one reading record
-    def display_reading(reading, index)
+    def display_reading(reading)
       puts <<~TEXT
-        Reading #{index + 1} (ID: #{reading['ID']})
+        Reading ID: #{reading['ID']}
         Saved at: #{reading['saved_at']}
         Question: #{reading['question']}
         Cards: #{reading['cards'].join(' -> ')}

@@ -9,8 +9,6 @@
 - Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md. Session 3 is complete; Session 4 remains.
 
 ### Essential Features - Implementation
-- write tests for load session
-- implement load session, allowing tests to inject other filepaths
 - write tests for review
 - implement review
 
@@ -28,6 +26,8 @@
 
 ## In Progress
 - write tests for save session with timestamp (#15)
+- write tests for load session
+- implement load session, allowing tests to inject other filepaths
 - finalize README.md (#26, PR #59; previously listed as docs/README.md)
 
 ## Done

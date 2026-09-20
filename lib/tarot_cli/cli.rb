@@ -52,7 +52,6 @@ module TarotCLI
       execute_command(command) unless command.empty?
     end
 
-    # Main-menu commands must guide users who try to save without an active reading.
     def execute_command(command)
       handler = COMMAND_HANDLERS[command]
       return :exit if handler == :exit
@@ -61,30 +60,24 @@ module TarotCLI
       unknown_command(command)
     end
 
-    # Print the same command guidance used by the help flags.
     def show_usage
       puts USAGE
     end
 
-    # Keep Load visibly planned until its session restoration contract is implemented.
     def show_load_placeholder = puts 'not yet implemented'
 
-    # Explain why drawing must begin from a new reading.
     def show_draw_without_reading
       missing_reading('draw')
     end
 
-    # Explain why saving requires an active reading.
     def show_save_without_reading
       missing_reading('save')
     end
 
-    # Explain why there is no deck state to shuffle at the main menu.
     def show_shuffle_without_reading
       puts 'No active reading to shuffle.'
     end
 
-    # Explain how to start a reading when a session-only command is used at the menu.
     def missing_reading(command)
       if command == 'save'
         puts 'Cannot save an empty reading. Please start a new reading and draw cards first.'
@@ -93,7 +86,6 @@ module TarotCLI
       end
     end
 
-    # Show every saved reading while keeping storage failures inside the CLI loop.
     def review_readings
       readings = ReadingStore.new(path: @save_path).readings
       return puts 'No saved readings found.' if readings.empty?
@@ -105,7 +97,6 @@ module TarotCLI
       puts "Could not review saved readings: #{e.message}"
     end
 
-    # Render one reading record
     def display_reading(reading)
       puts <<~TEXT
         Reading ID: #{reading['ID']}

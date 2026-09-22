@@ -23,6 +23,17 @@ class ReadingStoreFailureTest < Minitest::Test
     end
   end
 
+  def test_review_rejects_invalid_timestamp_without_changing_history
+    save_reading
+    data = JSON.parse(File.read(@path))
+    data['readings'].first['saved_at'] = 'not-a-timestamp'
+    contents = JSON.generate(data)
+    File.write(@path, contents)
+
+    assert_raises(TarotCLI::ReadingStore::Error) { @store.readings }
+    assert_equal contents, File.read(@path)
+  end
+
   def test_reports_an_unwritable_destination
     store = TarotCLI::ReadingStore.new(path: File.join(@directory, 'missing', 'readings.json'))
 

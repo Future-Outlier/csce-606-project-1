@@ -15,6 +15,14 @@ module TarotCLI
         exit, quit        Exit tarot-cli
     TEXT
 
+    COMMAND_HANDLERS = {
+      'help' => :show_usage, '-h' => :show_usage, '--help' => :show_usage,
+      'new' => :start_session, 'review' => :review_readings,
+      'load' => :show_load_placeholder, 'draw' => :show_draw_without_reading,
+      'save' => :show_save_without_reading, 'shuffle' => :show_shuffle_without_reading,
+      'exit' => :exit, 'quit' => :exit
+    }.freeze
+
     # Use one history file across readings while allowing tests to choose a temporary path.
     def initialize(runner: QwenRunner.new, save_path: ReadingStore::DEFAULT_PATH)
       @save_path = save_path
@@ -44,27 +52,60 @@ module TarotCLI
       execute_command(command) unless command.empty?
     end
 
-    # Main-menu commands must guide users who try to save without an active reading.
     def execute_command(command)
-      case command
-      when 'help', '-h', '--help' then puts USAGE
-      when 'new' then start_session
-      when 'review', 'load' then puts 'not yet implemented'
-      when 'draw', 'save' then missing_reading(command)
-      when 'shuffle' then puts 'No active reading to shuffle.'
-      when 'exit', 'quit' then :exit
-      else
-        unknown_command(command)
-      end
+      handler = COMMAND_HANDLERS[command]
+      return :exit if handler == :exit
+      return send(handler) if handler
+
+      unknown_command(command)
     end
 
-    # Explain how to start a reading when a session-only command is used at the menu.
+    def show_usage
+      puts USAGE
+    end
+
+    def show_load_placeholder = puts 'not yet implemented'
+
+    def show_draw_without_reading
+      missing_reading('draw')
+    end
+
+    def show_save_without_reading
+      missing_reading('save')
+    end
+
+    def show_shuffle_without_reading
+      puts 'No active reading to shuffle.'
+    end
+
     def missing_reading(command)
       if command == 'save'
         puts 'Cannot save an empty reading. Please start a new reading and draw cards first.'
       else
         puts "Start a new reading with 'new' and enter a question before drawing."
       end
+    end
+
+    def review_readings
+      readings = ReadingStore.new(path: @save_path).readings
+      return puts 'No saved readings found.' if readings.empty?
+
+      readings.sort_by { |reading| Time.iso8601(reading['saved_at']) }.reverse_each do |reading|
+        display_reading(reading)
+      end
+    rescue ReadingStore::Error => e
+      puts "Could not review saved readings: #{e.message}"
+    end
+
+    def display_reading(reading)
+      puts <<~TEXT
+        Reading ID: #{reading['ID']}
+        Saved at: #{reading['saved_at']}
+        Question: #{reading['question']}
+        Cards: #{reading['cards'].join(' -> ')}
+        Interpretation: #{reading['interpretation']}
+
+      TEXT
     end
 
     # Carry the chosen runner and save destination into every new reading.

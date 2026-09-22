@@ -39,7 +39,7 @@ Display the usage statement without starting an interactive session:
 bundle exec ruby bin/tarot --help
 ```
 
-### saving a reading
+### saving and reviewing readings
 
 Start a reading with `new`, enter a question, and use `draw` one to three times.
 Then type `save` to append the reading to `readings.json` in the directory where
@@ -53,6 +53,12 @@ and the latest available interpretation (an empty string if interpretation faile
 Saving an empty reading is rejected. If saving fails, the app reports the error and
 keeps the current reading so you can continue or retry. Invalid existing history is
 preserved rather than overwritten.
+
+At the main menu, type `review` to display every saved reading in reverse
+chronological order, with the most recent reading first,
+including its question, timestamp, cards, and latest interpretation. A missing or
+empty history reports `No saved readings found.`; malformed history reports an error
+without crashing.
 
 ## running tests
 
@@ -81,7 +87,7 @@ View the report by opening the file with a web browser.
 
 ## known limitations
 
-- Load, Review, card details, and card ASCII art are not implemented yet.
+- Load, card details, and card ASCII art are not implemented yet.
 - `help`, `exit`, and `quit` are treated as question text at the question prompt
   and ignored during an active reading ([#64](https://github.com/ianebeckett/csce-606-project-1/issues/64),
   [#65](https://github.com/ianebeckett/csce-606-project-1/issues/65)). During a reading,

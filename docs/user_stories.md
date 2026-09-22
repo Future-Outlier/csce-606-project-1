@@ -47,7 +47,8 @@ As a repeat user I want to review my saved readings so that I can ponder their m
 
 Given the user has previously saved readings in the system,
 When they execute the history/review command,
-Then the terminal must display a chronological list of all past readings,
+Then the terminal must display all past readings in reverse chronological order,
+with the most recently saved reading first,
 showing the question, cards in draw order, save time, and available interpretation for each session.
 
 Given there is a saved reading,

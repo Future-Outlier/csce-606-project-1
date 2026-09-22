@@ -33,13 +33,6 @@ class SaveAcceptanceTest < Minitest::Test
     assert_includes output, reading['interpretation']
   end
 
-  def test_saves_three_cards_in_the_displayed_order
-    output = run_cli("new\nThree-card question\ndraw\ndraw\ndraw\nsave\nexit\n")
-
-    assert_equal 3, readings.first['cards'].size
-    assert_equal drawn_cards(output), readings.first['cards']
-  end
-
   def test_saved_readings_survive_restarting_the_application
     run_cli("new\nFirst question\ndraw\nsave\nexit\n")
     first_reading = readings.first

@@ -6,7 +6,14 @@ require 'tarot_cli/cli'
 
 class ShuffleAcceptanceTest < Minitest::Test
   class FakeRunner
+    attr_reader :questions
+
+    def initialize
+      @questions = []
+    end
+
     def interpret(question:, cards:)
+      @questions << question
       "#{question}: #{cards.map(&:name).join(', ')}"
     end
   end
@@ -26,10 +33,15 @@ class ShuffleAcceptanceTest < Minitest::Test
   INPUT
 
   def test_shuffle_starts_a_clean_reading_with_a_new_question
-    status, output = run_cli(SHUFFLE_FLOW)
+    runner = FakeRunner.new
+    status, output = run_cli(SHUFFLE_FLOW, runner)
 
     assert_equal 0, status
     assert_clean_spreads(output)
+    assert_equal ['First question', 'Second question'], runner.questions
+    assert_includes output, 'First question: '
+    assert_includes output, 'Second question: '
+    assert_includes output, 'Question cannot be blank.'
   end
 
   private
@@ -40,11 +52,11 @@ class ShuffleAcceptanceTest < Minitest::Test
     spreads.each { |spread| refute_includes spread, '->' }
   end
 
-  def run_cli(input)
+  def run_cli(input, runner)
     original_stdin = $stdin
     $stdin = StringIO.new(input)
     status = nil
-    output, = capture_io { status = TarotCLI::CLI.new(runner: FakeRunner.new).run }
+    output, = capture_io { status = TarotCLI::CLI.new(runner: runner).run }
     [status, output]
   ensure
     $stdin = original_stdin

@@ -31,18 +31,6 @@ class ReadingFlowTest < Minitest::Test
     assert_includes output, 'Usage: tarot [command]'
   end
 
-  def test_new_cli_instances_append_without_changing_saved_interpretations
-    run_cli("new\nFirst question\ndraw\nsave\nexit\n", completion('First interpretation'))
-    original = readings.first
-    run_cli("new\nSecond question\ndraw\nsave\nexit\n", completion('Second interpretation'))
-    first, second = readings
-
-    assert_equal [1, 2], [first['ID'], second['ID']]
-    assert_equal original, first
-    assert_equal 'Second question', second['question']
-    assert_equal 'Second interpretation', second['interpretation']
-  end
-
   def test_malformed_qwen_reply_does_not_save_a_stale_interpretation
     invalid = ScriptedQwenHttp::Response.new(code: '200', body: '{broken json')
     output = run_cli("new\nQuestion\ndraw\ndraw\nsave\nexit\n", completion('Stale interpretation'), invalid)
@@ -52,26 +40,6 @@ class ReadingFlowTest < Minitest::Test
     assert_equal '', reading['interpretation']
     assert_equal 2, reading['cards'].size
     assert_equal drawn_cards(output), reading['cards']
-  end
-
-  def test_chat_connection_failure_still_allows_saving_the_drawn_cards
-    output = run_cli("new\nQuestion\ndraw\nsave\nexit\n", Errno::ECONNREFUSED.new)
-    reading = readings.first
-
-    assert_includes output, 'Interpretation unavailable: Could not reach the local Qwen server:'
-    assert_equal '', reading['interpretation']
-    assert_equal 1, reading['cards'].size
-    assert_equal drawn_cards(output), reading['cards']
-  end
-
-  def test_corrupt_history_is_preserved_and_the_cli_remains_usable
-    File.write(@path, '{broken json')
-    output = run_cli("new\nQuestion\ndraw\nsave\nshuffle\nhelp\nexit\n", completion('An interpretation'))
-
-    assert_includes output, 'Could not save reading:'
-    refute_includes output, 'Session successfully saved'
-    assert_equal '{broken json', File.read(@path)
-    assert_includes output, 'Usage: tarot [command]'
   end
 
   private

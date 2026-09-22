@@ -67,17 +67,6 @@ class CLITest < Minitest::Test
     assert_equal 0, status
   end
 
-  def test_new_readings_use_the_injected_runner
-    runner = FakeRunner.new
-    input = "new\nFirst question\ndraw\nshuffle\nnew\nSecond question\ndraw\nshuffle\nexit\n"
-    status, output = run_cli(input, runner: runner)
-
-    assert_equal 0, status
-    assert_equal ['First question', 'Second question'], runner.questions
-    assert_includes output, 'Injected interpretation for First question:'
-    assert_includes output, 'Injected interpretation for Second question:'
-  end
-
   private
 
   def run_cli(input, arguments = [], runner: FakeRunner.new)

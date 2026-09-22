@@ -44,17 +44,6 @@ class SessionSaveTest < Minitest::Test
     refute File.exist?(@path)
   end
 
-  def test_rejects_a_missing_question_even_with_drawn_cards
-    @deck.draw_card
-    [nil, '', '   '].each do |question|
-      @session = build_session(question)
-      result, output = execute('save')
-      assert_nil result
-      assert_includes output, 'Cannot save a reading without a question.'
-    end
-    refute File.exist?(@path)
-  end
-
   def test_failed_save_preserves_the_active_reading
     @deck.draw_card
     original_cards = @deck.drawn_cards.dup

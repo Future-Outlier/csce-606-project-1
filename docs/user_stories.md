@@ -116,13 +116,14 @@ As a user I want to view ASCII art of the cards so that I can visualize them.
 
 **Acceptance Criteria**
 
-Given a card has been drawn or selected,
+Given a card has been drawn in the current reading,
 When the user requests to see the art for that card,
 Then the terminal must render the visual representation (e.g., ASCII art or a
-text-based layout wrapper) associated with that specific card.
+text-based layout wrapper) associated with that specific card,
+And the user may select that drawn card by name or ID.
 
-Given a card has been drawn or selected,
-When the user requests the art for an invalid card identifier,
+Given a reading is active,
+When the user requests the art for an invalid or undrawn card identifier,
 Then the system must reject the input,
 And display an error message stating: "Could not display art. Invalid card selection."
 

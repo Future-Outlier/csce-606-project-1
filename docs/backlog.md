@@ -12,9 +12,6 @@
 - implement load session, allowing tests to inject other filepaths
 
 ### Optional Features - Implementation
-- Create ASCII art
-- write tests for ASCII art viewing feature
-- implement ASCII art viewing feature
 - write tests for view card details
 - implement view card details
 - write tests for card description
@@ -24,6 +21,7 @@
 - finalize docs/design.md
 
 ## In Progress
+- View card ASCII art (#24, PR #72)
 
 ## Done
 - implement save session with timestamp (#15)

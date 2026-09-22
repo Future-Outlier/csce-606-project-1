@@ -2,18 +2,23 @@
 
 require 'json'
 
-Card = Data.define(:id, :name, :description) do
-  # preload all card data to minimize file I/O
-  # this isn't an issue because cards.json is less than 30 kilobytes
+Card = Data.define(:id, :name, :description, :art) do
+  def initialize(id:, name:, description:, art: [])
+    super
+  end
+
+  def ascii_art
+    "#{name} (##{id})\n#{art.join("\n")}"
+  end
+
   def self.load_from_file(file_path)
-    file_contents = File.read(file_path, encoding: Encoding::UTF_8)
-    data = JSON.parse(file_contents)
-    cards = data['cards']
+    cards = JSON.parse(File.read(file_path, encoding: Encoding::UTF_8)).fetch('cards')
     cards.map do |card_data|
       new(
         id: card_data['id'],
         name: card_data['name'],
-        description: card_data['description']
+        description: card_data['description'],
+        art: card_data.fetch('art')
       )
     end
   end

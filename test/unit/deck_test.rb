@@ -6,8 +6,8 @@ require_relative '../../lib/tarot_cli/card'
 
 class TestDeck < Minitest::Test
   def setup
-    @card_one = Card.new(name: 'Card One', description: 'First')
-    @card_two = Card.new(name: 'Card Two', description: 'Second')
+    @card_one = Card.new(id: 1, name: 'Card One', description: 'First')
+    @card_two = Card.new(id: 2, name: 'Card Two', description: 'Second')
     @deck = Deck.new(cards: [@card_one, @card_two])
   end
 

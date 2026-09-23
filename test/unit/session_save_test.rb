@@ -16,7 +16,8 @@ class SessionSaveTest < Minitest::Test
   def setup
     @directory = Dir.mktmpdir('tarot-session-save-test')
     @path = File.join(@directory, 'readings.json')
-    @deck = Deck.new(cards: %w[Fool World Tower].map { |name| Card.new(name: name, description: '') })
+    cards = %w[Fool World Tower].map.with_index { |name, index| Card.new(id: index, name: name, description: '') }
+    @deck = Deck.new(cards: cards)
     @session = build_session
   end
 

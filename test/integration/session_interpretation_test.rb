@@ -23,7 +23,7 @@ class SessionInterpretationTest < Minitest::Test
 
   def setup
     cards = 4.times.map do |index|
-      Card.new(name: "Card #{index + 1}", description: "Description #{index + 1}")
+      Card.new(id: index + 1, name: "Card #{index + 1}", description: "Description #{index + 1}")
     end
     @deck = Deck.new(cards: cards)
   end

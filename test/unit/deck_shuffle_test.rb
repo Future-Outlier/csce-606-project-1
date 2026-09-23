@@ -7,7 +7,7 @@ require 'tarot_cli/deck'
 class DeckShuffleTest < Minitest::Test
   def setup
     @cards = (1..4).map do |number|
-      Card.new(name: "Card #{number}", description: "Description #{number}")
+      Card.new(id: number, name: "Card #{number}", description: "Description #{number}")
     end
     @deck = Deck.new(cards: @cards)
   end

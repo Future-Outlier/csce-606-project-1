@@ -33,7 +33,7 @@ The document will evolve with implementation and does not block unrelated coding
     - finds a drawn card by name for `view <card>`
 
 - Card
-    - holds the card name, description, and terminal illustration from `cards.json`
+    - holds the card ID, name, description, and terminal illustration from `cards.json`
     - joins the selected card's illustration lines for terminal output
 
 - QwenRunner
@@ -60,7 +60,7 @@ The document will evolve with implementation and does not block unrelated coding
             │               │                     │<────────│  - holds user state │
 +─────────────────────────+ +─────────────────────+  save   │ - queries runner    │
 │           CARD          │                                 │  - renders the UI   │
-│ - name, description    │                                 │                     │
+│ - id, name, description │                                 │                     │
 +─────────────────────────+                                 +─────────────────────+
            ^                                                          ^  │
            │                                                          │  │
@@ -606,14 +606,15 @@ an invalid timestamp is rejected as malformed history.
 
 ### View card art
 
-Each card's terminal illustration is stored with its name and description
+Each card's terminal illustration is stored with its ID, name, and description
 in the existing `cards.json`. This follows the one-file card-data decision and
 lets `view <card>` work offline without another runtime dependency. The tradeoff
 is a larger data file and a UTF-8 terminal requirement. `Deck` owns the drawn
 cards, so `Session` looks up only the cards in the active reading before printing
 an illustration. The art source and license are recorded in the README.
 
-`view <card>` accepts a drawn card's displayed name, ignoring letter case.
+Card IDs remain internal identifiers for possible future decks or translated
+names. `view <card>` accepts a drawn card's displayed name, ignoring letter case.
 Numeric card IDs are not accepted: the interface does not present them before
 selection, and their values do not identify a card meaningfully to the user.
 The terminal output starts with the card name and does not show a numeric ID.

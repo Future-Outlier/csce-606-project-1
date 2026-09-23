@@ -2,8 +2,8 @@
 
 require 'json'
 
-Card = Data.define(:name, :description, :art) do
-  def initialize(name:, description:, art: [])
+Card = Data.define(:id, :name, :description, :art) do
+  def initialize(id:, name:, description:, art: [])
     super
   end
 
@@ -15,6 +15,7 @@ Card = Data.define(:name, :description, :art) do
     cards = JSON.parse(File.read(file_path, encoding: Encoding::UTF_8)).fetch('cards')
     cards.map do |card_data|
       new(
+        id: card_data['id'],
         name: card_data['name'],
         description: card_data['description'],
         art: card_data.fetch('art')

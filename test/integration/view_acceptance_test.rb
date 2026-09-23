@@ -22,6 +22,7 @@ class ViewAcceptanceTest < Minitest::Test
   def test_view_zero_does_not_select_a_drawn_fool
     card = CARDS.find { |candidate| candidate.name == 'The Fool' }
     refute_nil card
+    assert_equal 0, card.id
     deck = Deck.new(cards: [card])
     assert_equal card, deck.draw_card
     session = nil

@@ -6,8 +6,8 @@ require 'tarot_cli/card'
 class CardTest < Minitest::Test
   def test_load_from_file_builds_cards_in_file_order
     input = {
-      cards: [{ name: 'B', description: "\u{6708}", art: ['B art'] },
-              { name: 'A', description: 'Sun', art: ['A art'] }]
+      cards: [{ id: 2, name: 'B', description: "\u{6708}", art: ['B art'] },
+              { id: 1, name: 'A', description: 'Sun', art: ['A art'] }]
     }
     cards = load_cards(input)
 

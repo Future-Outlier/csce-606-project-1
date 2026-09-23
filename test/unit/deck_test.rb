@@ -6,8 +6,8 @@ require_relative '../../lib/tarot_cli/card'
 
 class TestDeck < Minitest::Test
   def setup
-    @card_one = Card.new(id: 1, name: 'Card One', description: 'First')
-    @card_two = Card.new(id: 2, name: 'Card Two', description: 'Second')
+    @card_one = Card.new(name: 'Card One', description: 'First')
+    @card_two = Card.new(name: 'Card Two', description: 'Second')
     @deck = Deck.new(cards: [@card_one, @card_two])
   end
 
@@ -27,5 +27,11 @@ class TestDeck < Minitest::Test
   def test_draw_card_returns_nil_when_no_cards_available
     deck = Deck.new(cards: [])
     assert_nil deck.draw_card
+  end
+
+  def test_find_drawn_card_matches_name_without_case
+    drawn = @deck.draw_card
+
+    assert_equal drawn, @deck.find_drawn_card("  #{drawn.name.upcase}  ")
   end
 end

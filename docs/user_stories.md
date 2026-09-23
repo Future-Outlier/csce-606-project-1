@@ -120,10 +120,10 @@ Given a card has been drawn in the current reading,
 When the user requests to see the art for that card,
 Then the terminal must render the visual representation (e.g., ASCII art or a
 text-based layout wrapper) associated with that specific card,
-And the user may select that drawn card by name or ID.
+And the user may select that drawn card by name.
 
 Given a reading is active,
-When the user requests the art for an invalid or undrawn card identifier,
+When the user requests the art for an invalid or undrawn card name,
 Then the system must reject the input,
 And display an error message stating: "Could not display art. Invalid card selection."
 

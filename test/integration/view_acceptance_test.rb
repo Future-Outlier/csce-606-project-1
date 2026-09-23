@@ -2,6 +2,7 @@ require 'open3'
 require 'rbconfig'
 require 'test_helper'
 require 'tarot_cli/card'
+require 'tarot_cli/session'
 
 class ViewAcceptanceTest < Minitest::Test
   CARDS = Card.load_from_file(File.expand_path('../../lib/data/cards.json', __dir__))
@@ -9,18 +10,40 @@ class ViewAcceptanceTest < Minitest::Test
   FAKE_RUNNER = File.expand_path('../support/fake_qwen_runner.rb', __dir__)
   INVALID = 'Could not display art. Invalid card selection.'.freeze
 
-  def test_executable_views_only_the_drawn_card_by_name_or_id
-    output = run_executable("new\nQuestion\nview 0\ndraw\n#{view_commands}view 99\nview\nshuffle\nexit\n")
+  def test_executable_views_only_the_drawn_card_by_name
+    names = CARDS.map { |card| "view #{card.name}\n" }.join
+    output = run_executable("new\nQuestion\nview The Fool\ndraw\n#{names}view Not a card\nview\nshuffle\nexit\n")
     drawn = output[/Current Spread: \[ (.*?) \]/, 1]
 
-    assert_equal({ drawn => 2 }, rendered_counts(output))
-    assert_equal((CARDS.size * 2) + 1, output.scan(INVALID).size)
+    assert_equal({ drawn => 1 }, rendered_counts(output))
+    assert_equal(CARDS.size + 2, output.scan(INVALID).size)
+  end
+
+  def test_executable_rejects_numeric_card_selections
+    numbers = (0...CARDS.size).map { |number| "view #{number}\n" }.join
+    output = run_executable("new\nQuestion\ndraw\n#{numbers}view 99\nshuffle\nexit\n")
+
+    assert_empty rendered_counts(output)
+    assert_equal CARDS.size + 1, output.scan(INVALID).size
+  end
+
+  def test_every_card_can_be_viewed_after_it_is_drawn
+    assert_equal 78, CARDS.size
+    assert_equal 78, CARDS.map(&:name).uniq.size
+    CARDS.each { |card| assert_card_can_be_viewed(card) }
   end
 
   private
 
-  def view_commands
-    CARDS.flat_map { |card| ["view #{card.name}\n", "view #{card.id}\n"] }.join
+  def assert_card_can_be_viewed(card)
+    refute_empty card.art, card.name
+    deck = Deck.new(cards: [card])
+    assert_equal card, deck.draw_card
+    session = nil
+    capture_io { session = TarotCLI::Session.new('Question', deck: deck) }
+
+    output, = capture_io { session.execute("view #{card.name}") }
+    assert_equal "#{expected_art(card)}\n", output, card.name
   end
 
   def rendered_counts(output)
@@ -29,7 +52,7 @@ class ViewAcceptanceTest < Minitest::Test
   end
 
   def expected_art(card)
-    "#{card.name} (##{card.id})\n#{card.art.join("\n")}"
+    "#{card.name}\n#{card.art.join("\n")}"
   end
 
   def run_executable(input)

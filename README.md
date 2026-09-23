@@ -62,9 +62,10 @@ without crashing.
 
 ### viewing a card
 
-After drawing a card, type `view <card>` with that card's name or ID. For example,
-if you drew The Fool, use `view The Fool` or `view 0`. An undrawn or invalid card
-displays an error and keeps the reading active.
+After drawing a card, type `view <card>` with that card's name. For example,
+if you drew The Fool, use `view The Fool`. Names are matched without regard to
+letter case. An undrawn or invalid card displays an error and keeps the
+reading active.
 
 ## running tests
 
@@ -89,7 +90,7 @@ View the report by opening the file with a web browser.
 - Display an updated local Qwen interpretation after every card is drawn
 - Shuffle all cards back into the deck and return to the main menu
 - Save readings to JSON with ordered cards, timestamps, and persistent history
-- View a drawn card's illustration by name or ID
+- View a drawn card's illustration by name
 - Clean exit with `exit`, `quit`, or end-of-input
 
 ## known limitations

@@ -43,9 +43,9 @@ class QwenRunnerTest < Minitest::Test
 
   def setup
     @cards = [
-      Card.new(id: 1, name: 'First', description: 'Beginning'),
-      Card.new(id: 2, name: 'Second', description: 'Middle'),
-      Card.new(id: 3, name: 'Third', description: 'Outcome')
+      Card.new(name: 'First', description: 'Beginning'),
+      Card.new(name: 'Second', description: 'Middle'),
+      Card.new(name: 'Third', description: 'Outcome')
     ]
   end
 

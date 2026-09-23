@@ -30,10 +30,10 @@ The document will evolve with implementation and does not block unrelated coding
     - draws a random card when requested by the user
     - tracks which cards have been drawn and in what order
     - ensures that the same card is not drawn twice at the same time
-    - finds a drawn card by name or ID for `view <card>`
+    - finds a drawn card by name for `view <card>`
 
 - Card
-    - holds the card ID, name, description, and terminal illustration from `cards.json`
+    - holds the card name, description, and terminal illustration from `cards.json`
     - joins the selected card's illustration lines for terminal output
 
 - QwenRunner
@@ -60,7 +60,7 @@ The document will evolve with implementation and does not block unrelated coding
             │               │                     │<────────│  - holds user state │
 +─────────────────────────+ +─────────────────────+  save   │ - queries runner    │
 │           CARD          │                                 │  - renders the UI   │
-│ - id, name, description │                                 │                     │
+│ - name, description    │                                 │                     │
 +─────────────────────────+                                 +─────────────────────+
            ^                                                          ^  │
            │                                                          │  │
@@ -215,7 +215,7 @@ and use them to identify foundations that need to be rebuilt.
 Available Commands: [draw], [view <drawn card>], [details <card>], [save], [shuffle], [help], [exit]
 
 > view The Tower
-The Tower (#16)
+The Tower
 .-------------------.
 |        XVI     /__|
 |    <*^       /__´ |
@@ -368,7 +368,7 @@ once with the question and all cards drawn so far, and the updated interpretatio
 is displayed.
 - If user has drawn at least one card, they may request to see details or art of any of the
 drawn cards.
-- After a draw, `view <card>` accepts the drawn card's name or ID and prints its
+- After a draw, `view <card>` accepts the drawn card's name and prints its
   illustration. A missing, unknown, or undrawn selection reports an error and
   leaves the current reading active.
 - If the user requests to see details of one of the drawn cards, they will be shown a
@@ -606,9 +606,14 @@ an invalid timestamp is rejected as malformed history.
 
 ### View card art
 
-Each card's terminal illustration is stored with its ID, name, and description
+Each card's terminal illustration is stored with its name and description
 in the existing `cards.json`. This follows the one-file card-data decision and
 lets `view <card>` work offline without another runtime dependency. The tradeoff
 is a larger data file and a UTF-8 terminal requirement. `Deck` owns the drawn
 cards, so `Session` looks up only the cards in the active reading before printing
 an illustration. The art source and license are recorded in the README.
+
+`view <card>` accepts a drawn card's displayed name, ignoring letter case.
+Numeric card IDs are not accepted: the interface does not present them before
+selection, and their values do not identify a card meaningfully to the user.
+The terminal output starts with the card name and does not show a numeric ID.

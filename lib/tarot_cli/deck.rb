@@ -24,4 +24,9 @@ class Deck
   def shuffle
     @drawn_cards.clear
   end
+
+  def find_drawn_card(selection)
+    value = selection.to_s.strip
+    @drawn_cards.find { |card| card.name.casecmp?(value) }
+  end
 end

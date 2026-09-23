@@ -28,4 +28,10 @@ class TestDeck < Minitest::Test
     deck = Deck.new(cards: [])
     assert_nil deck.draw_card
   end
+
+  def test_find_drawn_card_matches_name_without_case
+    drawn = @deck.draw_card
+
+    assert_equal drawn, @deck.find_drawn_card("  #{drawn.name.upcase}  ")
+  end
 end

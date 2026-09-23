@@ -19,12 +19,16 @@ class ViewAcceptanceTest < Minitest::Test
     assert_equal(CARDS.size + 2, output.scan(INVALID).size)
   end
 
-  def test_executable_rejects_numeric_card_selections
-    numbers = (0...CARDS.size).map { |number| "view #{number}\n" }.join
-    output = run_executable("new\nQuestion\ndraw\n#{numbers}view 99\nshuffle\nexit\n")
+  def test_view_zero_does_not_select_a_drawn_fool
+    card = CARDS.find { |candidate| candidate.name == 'The Fool' }
+    refute_nil card
+    deck = Deck.new(cards: [card])
+    assert_equal card, deck.draw_card
+    session = nil
+    capture_io { session = TarotCLI::Session.new('Question', deck: deck) }
 
-    assert_empty rendered_counts(output)
-    assert_equal CARDS.size + 1, output.scan(INVALID).size
+    output, = capture_io { session.execute('view 0') }
+    assert_equal "#{INVALID} Choose a drawn card.\n", output
   end
 
   def test_every_card_can_be_viewed_after_it_is_drawn

@@ -5,11 +5,25 @@ require_relative 'qwen_runner'
 require_relative 'reading_store'
 
 module TarotCLI
-  class Session
+  class Session # rubocop:disable Metrics/ClassLength
     MAX_CARDS = 3
+
     LINE = <<~TEXT
       ------------------------------------------------------------------------
     TEXT
+
+    AVAILABLE_COMMANDS = <<~TEXT
+      Available Commands: [draw], [view <drawn card>], [details <card>], [save], [shuffle], [help], [exit]
+    TEXT
+
+    COMMAND_HANDLERS = {
+      'draw' => :draw_card, 'details' => :not_implemented,
+      'save' => :save, 'shuffle' => :shuffle,
+      'help' => :show_usage,
+      'new' => :non_session_command, 'review' => :non_session_command,
+      'load' => :non_session_command,
+      'exit' => :not_implemented, 'quit' => :not_implemented
+    }.freeze
 
     attr_reader :question, :interpretation
 
@@ -22,7 +36,6 @@ module TarotCLI
       @reading_store = ReadingStore.new(path: save_path)
       puts <<~TEXT
         [Session Initialized]
-        Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
       TEXT
     end
 
@@ -37,17 +50,30 @@ module TarotCLI
     # Session commands operate on the active reading until it returns to the main menu.
     def execute(line)
       command = line.strip
-      return if command.empty?
+      execute_command(command) unless command.empty?
+    end
 
-      case command
-      when 'draw' then draw_card
-      when 'details' then puts 'not yet implemented'
-      when 'save' then save
-      when 'shuffle' then shuffle
-      end
+    def execute_command(command)
+      name, selection = command.split(' ', 2)
+      return view_card(selection) if name == 'view'
+
+      handler = COMMAND_HANDLERS[command]
+      return :exit if handler == :exit
+      return send(handler) if handler
+
+      unknown_command
     end
 
     private
+
+    def show_usage
+      puts AVAILABLE_COMMANDS
+    end
+
+    def view_card(selection)
+      card = @deck.find_drawn_card(selection)
+      puts(card ? card.ascii_art : 'Could not display art. Invalid card selection. Choose a drawn card.')
+    end
 
     # Return to the menu only after saving succeeds, keeping a failed reading available to retry.
     def save
@@ -111,6 +137,26 @@ module TarotCLI
       @interpretation = nil
       puts 'Session cleared. All cards are available again. Returning to Main Menu...'
       :exit
+    end
+
+    def non_session_command
+      puts <<~TEXT
+        That command is not available during a reading.
+        #{AVAILABLE_COMMANDS}
+      TEXT
+    end
+
+    def unknown_command
+      puts <<~TEXT
+        Unknown command.
+        #{AVAILABLE_COMMANDS}
+      TEXT
+    end
+
+    def not_implemented
+      puts <<~TEXT
+        That command has not yet been implemented.
+      TEXT
     end
 
     def formatted_cards

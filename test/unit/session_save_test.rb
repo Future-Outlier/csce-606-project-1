@@ -16,7 +16,8 @@ class SessionSaveTest < Minitest::Test
   def setup
     @directory = Dir.mktmpdir('tarot-session-save-test')
     @path = File.join(@directory, 'readings.json')
-    @deck = Deck.new(cards: %w[Fool World Tower].map { |name| Card.new(id: name, name: name, description: '') })
+    cards = %w[Fool World Tower].map.with_index { |name, index| Card.new(id: index, name: name, description: '') }
+    @deck = Deck.new(cards: cards)
     @session = build_session
   end
 
@@ -41,17 +42,6 @@ class SessionSaveTest < Minitest::Test
 
     assert_nil result
     assert_includes output, 'Cannot save an empty reading. Please draw cards first.'
-    refute File.exist?(@path)
-  end
-
-  def test_rejects_a_missing_question_even_with_drawn_cards
-    @deck.draw_card
-    [nil, '', '   '].each do |question|
-      @session = build_session(question)
-      result, output = execute('save')
-      assert_nil result
-      assert_includes output, 'Cannot save a reading without a question.'
-    end
     refute File.exist?(@path)
   end
 

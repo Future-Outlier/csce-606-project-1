@@ -47,7 +47,8 @@ As a repeat user I want to review my saved readings so that I can ponder their m
 
 Given the user has previously saved readings in the system,
 When they execute the history/review command,
-Then the terminal must display a chronological list of all past readings,
+Then the terminal must display all past readings in reverse chronological order,
+with the most recently saved reading first,
 showing the question, cards in draw order, save time, and available interpretation for each session.
 
 Given there is a saved reading,
@@ -115,13 +116,14 @@ As a user I want to view ASCII art of the cards so that I can visualize them.
 
 **Acceptance Criteria**
 
-Given a card has been drawn or selected,
+Given a card has been drawn in the current reading,
 When the user requests to see the art for that card,
 Then the terminal must render the visual representation (e.g., ASCII art or a
-text-based layout wrapper) associated with that specific card.
+text-based layout wrapper) associated with that specific card,
+And the user may select that drawn card by name.
 
-Given a card has been drawn or selected,
-When the user requests the art for an invalid card identifier,
+Given a reading is active,
+When the user requests the art for an invalid or undrawn card name,
 Then the system must reject the input,
 And display an error message stating: "Could not display art. Invalid card selection."
 

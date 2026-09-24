@@ -24,6 +24,13 @@ module TarotCLI
       raise Error, e.message
     end
 
+    # Return saved readings in their original save order for the review command.
+    def readings
+      read_history['readings']
+    rescue SystemCallError, IOError, JSON::JSONError => e
+      raise Error, e.message
+    end
+
     private
 
     # Card names stay in draw order, and unavailable interpretation is an empty string.
@@ -62,9 +69,25 @@ module TarotCLI
     def valid_reading?(reading)
       return false unless reading.is_a?(Hash)
       return false unless reading['ID'].is_a?(Integer) && reading['ID'].positive?
-      return false unless %w[saved_at question interpretation].all? { |key| reading[key].is_a?(String) }
+      return false unless valid_metadata?(reading)
 
       reading['cards'].is_a?(Array) && reading['cards'].all?(String)
+    end
+
+    # Validate the fields that Review displays or uses for timestamp sorting.
+    def valid_metadata?(reading)
+      text_fields_valid = %w[saved_at question interpretation].all? do |key|
+        reading[key].is_a?(String)
+      end
+      text_fields_valid && valid_saved_at?(reading['saved_at'])
+    end
+
+    # Reject timestamps that Review cannot reliably compare chronologically.
+    def valid_saved_at?(saved_at)
+      Time.iso8601(saved_at)
+      true
+    rescue ArgumentError
+      false
     end
 
     # Write beside the destination so renaming publishes the complete file in one step.

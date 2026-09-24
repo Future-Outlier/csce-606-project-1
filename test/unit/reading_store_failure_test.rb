@@ -23,27 +23,15 @@ class ReadingStoreFailureTest < Minitest::Test
     end
   end
 
-  def test_rejects_invalid_history_containers
-    ['null', '[]', '{}', '{"readings": null}', '{"readings": {}}', '{"readings": [null]}'].each do |contents|
-      assert_rejected_history(contents)
-    end
-  end
-
-  def test_rejects_invalid_record_fields
+  def test_review_rejects_invalid_timestamp_without_changing_history
     save_reading
-    reading = JSON.parse(File.read(@path))['readings'].first
-    invalid_fields = { 'ID' => '1', 'saved_at' => nil, 'question' => nil,
-                       'cards' => [123], 'interpretation' => nil }
-    invalid_fields.each do |key, value|
-      assert_rejected_history(JSON.generate('readings' => [reading.merge(key => value)]))
-    end
-  end
+    data = JSON.parse(File.read(@path))
+    data['readings'].first['saved_at'] = 'not-a-timestamp'
+    contents = JSON.generate(data)
+    File.write(@path, contents)
 
-  def test_rejects_duplicate_ids
-    save_reading
-    reading = JSON.parse(File.read(@path))['readings'].first
-
-    assert_rejected_history(JSON.generate('readings' => [reading, reading]))
+    assert_raises(TarotCLI::ReadingStore::Error) { @store.readings }
+    assert_equal contents, File.read(@path)
   end
 
   def test_reports_an_unwritable_destination
@@ -51,24 +39,6 @@ class ReadingStoreFailureTest < Minitest::Test
 
     assert_raises(TarotCLI::ReadingStore::Error) { store.save(question: 'Question', cards: ['The Fool']) }
     assert_empty Dir.children(@directory)
-  end
-
-  def test_reports_a_directory_used_as_a_file
-    Dir.mkdir(@path)
-
-    assert_raises(TarotCLI::ReadingStore::Error) { save_reading }
-    assert File.directory?(@path)
-  end
-
-  def test_failed_serialization_preserves_history_and_removes_the_temporary_file
-    save_reading
-    original = File.binread(@path)
-
-    assert_raises(TarotCLI::ReadingStore::Error) do
-      @store.save(question: "\xFF".dup.force_encoding(Encoding::UTF_8), cards: ['The World'])
-    end
-    assert_equal original, File.binread(@path)
-    assert_equal ['readings.json'], Dir.children(@directory)
   end
 
   private

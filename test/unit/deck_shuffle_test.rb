@@ -6,8 +6,8 @@ require 'tarot_cli/deck'
 
 class DeckShuffleTest < Minitest::Test
   def setup
-    @cards = (1..4).map do |id|
-      Card.new(id: id, name: "Card #{id}", description: "Description #{id}")
+    @cards = (1..4).map do |number|
+      Card.new(id: number, name: "Card #{number}", description: "Description #{number}")
     end
     @deck = Deck.new(cards: @cards)
   end
@@ -29,7 +29,7 @@ class DeckShuffleTest < Minitest::Test
     @deck.shuffle
 
     second_reading = draw_all_cards
-    assert_equal card_ids(first_reading), card_ids(second_reading)
+    assert_equal card_names(first_reading), card_names(second_reading)
   end
 
   private
@@ -38,7 +38,7 @@ class DeckShuffleTest < Minitest::Test
     @cards.length.times.map { @deck.draw_card }
   end
 
-  def card_ids(cards)
-    cards.map(&:id).sort
+  def card_names(cards)
+    cards.map(&:name).sort
   end
 end

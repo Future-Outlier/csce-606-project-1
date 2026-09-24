@@ -3,19 +3,15 @@
 ## To Do
 
 ### Planning and Design
-- design UI for review
 
 ### Pair Programming
 - Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md. Session 3 is complete; Session 4 remains.
 
 ### Essential Features - Implementation
-- write tests for review
-- implement review
+- write tests for load session
+- implement load session, allowing tests to inject other filepaths
 
 ### Optional Features - Implementation
-- Create ASCII art
-- write tests for ASCII art viewing feature
-- implement ASCII art viewing feature
 - write tests for view card details
 - implement view card details
 - write tests for card description
@@ -25,10 +21,7 @@
 - finalize docs/design.md
 
 ## In Progress
-- write tests for save session with timestamp (#15)
-- write tests for load session
-- implement load session, allowing tests to inject other filepaths
-- finalize README.md (#26, PR #59; previously listed as docs/README.md)
+- View card ASCII art (#24, PR #72)
 
 ## Done
 - implement save session with timestamp (#15)

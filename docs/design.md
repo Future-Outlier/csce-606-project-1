@@ -9,7 +9,7 @@ The document will evolve with implementation and does not block unrelated coding
 - CLI
     - owns the main-menu loop, shared runner, and save-file path
     - prompts for a non-blank question and creates each Session
-    - currently prints placeholders for Review and Load
+    - renders Review history sorted by `saved_at`, newest first; Load remains a placeholder
 
 - Session
     - displays the active reading and handles its command loop
@@ -30,10 +30,11 @@ The document will evolve with implementation and does not block unrelated coding
     - draws a random card when requested by the user
     - tracks which cards have been drawn and in what order
     - ensures that the same card is not drawn twice at the same time
+    - finds a drawn card by name for `view <card>`
 
 - Card
-    - holds data about the card, including name, suit, rank, art, details, etc.
-    - has getters to allow Session to retreive data about the card
+    - holds the card ID, name, description, and terminal illustration from `cards.json`
+    - joins the selected card's illustration lines for terminal output
 
 - QwenRunner
     - formats the question and all currently drawn cards in draw order
@@ -73,6 +74,10 @@ The document will evolve with implementation and does not block unrelated coding
                                                         +─────────────────────────+
 ==================================================================================
 ```
+
+The View path is `view <card>` -> `Session` -> `Deck.find_drawn_card` ->
+`Card.ascii_art` -> terminal. The illustration is stored with the card in
+`cards.json`; no image download or model call occurs when viewing it.
 
 ### local Qwen runner contract
 
@@ -129,6 +134,8 @@ User -> CLI -> Session --question, ordered card names, interpretation--> Reading
 
 - `ID` is an integer starting at 1. New saves use the highest existing ID plus 1.
 - `saved_at` is the UTC save time as an ISO 8601 string.
+- Review sorts validated `saved_at` timestamps in descending order, so the most
+  recently saved reading appears first even if the JSON array is not ordered.
 - `question` and `interpretation` are strings. An unavailable interpretation is `""`.
 - `cards` contains card names as strings, in draw order.
 - The default file is `readings.json` in the directory where the app is launched.
@@ -149,6 +156,10 @@ User -> CLI -> Session --question, ordered card names, interpretation--> Reading
 - blank file or load missing save: notify the user without crashing, then allow more commands
 
 ## User interface design: mock-ups, expected interactions/workflows
+
+The mock-ups show the intended full workflow. Load, card details, and in-session
+exit are not implemented in the current checkout; see the README for the
+commands the grader can run now.
 
 ### example UI: main menu
 ```
@@ -189,7 +200,7 @@ Enter your intention or question for this session:
 Current Spread:
 ------------------------------------------------------------------------
 
-Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
+Available Commands: [draw], [view <drawn card>], [details <card>], [save], [shuffle], [help], [exit]
 
 > draw
 
@@ -201,7 +212,30 @@ INTERPRETATION:
 The Tower points to disruption around your launch. Prepare for sudden changes
 and use them to identify foundations that need to be rebuilt.
 
-Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
+Available Commands: [draw], [view <drawn card>], [details <card>], [save], [shuffle], [help], [exit]
+
+> view The Tower
+The Tower
+.-------------------.
+|        XVI     /__|
+|    <*^       /__´ |
+|   <^ ( (   /_´   .|
+|     (_)) /´    .  |
+|      |     )  .  .|
+|  .   |    (_). .  |
+| .    |  (  |      |
+|.     | (_) |      |
+| . \/ |     |      |
+|.  /  |     |\/    |
+| -/\  |     | \    |
+| O    |     | /\-  |
+|  .   |     |   O  |
+|     /\  /\ |      |
+|    /\/\/\/\/\     |
+|   /\/\/\/\/\/\    |
+|-------------------|
+|     The Tower     |
+`-------------------´
 
 > draw
 
@@ -213,7 +247,7 @@ INTERPRETATION:
 The Tower's disruption is followed by the Three of Wands, suggesting that
 careful planning and a wider view can turn early launch problems into progress.
 
-Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
+Available Commands: [draw], [view <drawn card>], [details <card>], [save], [shuffle], [help], [exit]
 
 > details The Tower
 ------------------------------------------------------------------------
@@ -242,12 +276,12 @@ complete fulfillment (The World). The launch will be chaotic at first,
 but an absolute victory in the end.
 ------------------------------------------------------------------------
 
-Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
+Available Commands: [draw], [view <drawn card>], [details <card>], [save], [shuffle], [help], [exit]
 
 > draw
 [!] You have drawn the maximum limit of 3 cards.
 
-Available Commands: [details <card>], [save], [shuffle], [help], [exit]
+Available Commands: [view <drawn card>], [details <card>], [save], [shuffle], [help], [exit]
 
 > save
 Session successfully saved to disk. Returning to Main Menu...
@@ -279,7 +313,7 @@ Enter your intention or question for this session:
 Current Spread:
 ------------------------------------------------------------------------
 
-Available Commands: [draw], [details <card>], [save], [shuffle], [help], [exit]
+Available Commands: [draw], [view <drawn card>], [details <card>], [save], [shuffle], [help], [exit]
 
 > draw
 
@@ -334,6 +368,9 @@ once with the question and all cards drawn so far, and the updated interpretatio
 is displayed.
 - If user has drawn at least one card, they may request to see details or art of any of the
 drawn cards.
+- After a draw, `view <card>` accepts the drawn card's name and prints its
+  illustration. A missing, unknown, or undrawn selection reports an error and
+  leaves the current reading active.
 - If the user requests to see details of one of the drawn cards, they will be shown a
 statement explaining major motifs depicted on the card and their meanings independent of
 the session and question.
@@ -526,3 +563,58 @@ We chose one JSON file because it avoids per-card paths and file checks.
 #### test plan
 
 an end-to-end test
+
+### design decision 5
+
+#### motivation
+
+Returning users usually want to see their latest reading first. We had always
+intended that behavior, but had not written it down explicitly until implementing
+the Review feature.
+
+#### solution 1
+
+Display records in the order they appear in `readings.json`.
+
+##### pros:
+- preserves the file's original order
+
+##### cons:
+- does not guarantee that the newest timestamp appears first if records are reordered
+
+#### solution 2
+
+Sort valid records by their ISO 8601 `saved_at` timestamp in descending order before display.
+
+##### pros:
+- directly guarantees the most recent reading appears first
+- keeps file storage order independent from presentation order
+
+##### cons:
+- requires timestamps to be valid ISO 8601 values
+
+#### decision
+
+Use solution 2. `ReadingStore` rejects timestamps that cannot be parsed, and the
+CLI sorts valid timestamps newest first while leaving the stored JSON order unchanged.
+
+#### test plan
+
+The acceptance suite supplies readings whose file order differs from timestamp order
+and verifies that Review displays the newer reading first. Unit coverage verifies that
+an invalid timestamp is rejected as malformed history.
+
+### View card art
+
+Each card's terminal illustration is stored with its ID, name, and description
+in the existing `cards.json`. This follows the one-file card-data decision and
+lets `view <card>` work offline without another runtime dependency. The tradeoff
+is a larger data file and a UTF-8 terminal requirement. `Deck` owns the drawn
+cards, so `Session` looks up only the cards in the active reading before printing
+an illustration. The art source and license are recorded in the README.
+
+Card IDs remain internal identifiers for possible future decks or translated
+names. `view <card>` accepts a drawn card's displayed name, ignoring letter case.
+Numeric card IDs are not accepted: the interface does not present them before
+selection, and their values do not identify a card meaningfully to the user.
+The terminal output starts with the card name and does not show a numeric ID.

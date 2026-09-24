@@ -73,6 +73,17 @@ class ReadingStoreTest < Minitest::Test
     assert_equal 1, readings.first['ID']
   end
 
+  def test_loads_the_selected_record_in_order_without_changing_saved_history
+    @store.save(question: 'First question', cards: ['The Fool'])
+    @store.save(question: 'My question', cards: ['The World', 'The Tower'], interpretation: 'Saved interpretation')
+    original = File.binread(@path)
+
+    reading = TarotCLI::ReadingStore.new(path: @path).load(2)
+
+    assert_equal JSON.parse(original)['readings'].last, reading
+    assert_equal original, File.binread(@path)
+  end
+
   private
 
   def readings

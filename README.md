@@ -39,7 +39,7 @@ Display the usage statement without starting an interactive session:
 bundle exec ruby bin/tarot --help
 ```
 
-### saving and reviewing readings
+### saving, reviewing, and loading readings
 
 Start a reading with `new`, enter a question, and use `draw` one to three times.
 Then type `save` to append the reading to `readings.json` in the directory where
@@ -59,6 +59,14 @@ chronological order, with the most recent reading first,
 including its question, timestamp, cards, and latest interpretation. A missing or
 empty history reports `No saved readings found.`; malformed history reports an error
 without crashing.
+
+At the main menu, type `load`, then enter one of the displayed reading IDs.
+The app restores and displays the question, cards in their original order, and
+saved interpretation without contacting the model. You can continue drawing up
+to three cards total, view a restored card, save another snapshot, or shuffle
+to return to the menu. Saving the continued reading keeps the original snapshot.
+A blank selection cancels loading. Missing history, invalid IDs, and load errors
+leave the main menu available.
 
 ### viewing a card
 
@@ -90,12 +98,13 @@ View the report by opening the file with a web browser.
 - Display an updated local Qwen interpretation after every card is drawn
 - Shuffle all cards back into the deck and return to the main menu
 - Save readings to JSON with ordered cards, timestamps, and persistent history
+- Load a saved reading by ID and continue from its saved state
 - View a drawn card's illustration by name
 - Clean exit with `exit`, `quit`, or end-of-input
 
 ## known limitations
 
-- Load and card details are not implemented yet.
+- Card details are not implemented yet.
 - Card illustrations contain Unicode characters and require a UTF-8 terminal.
 - `help`, `exit`, and `quit` are treated as question text at the question prompt
   and ignored during an active reading ([#64](https://github.com/ianebeckett/csce-606-project-1/issues/64),

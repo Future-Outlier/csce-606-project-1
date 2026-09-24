@@ -24,6 +24,11 @@ module TarotCLI
       raise Error, e.message
     end
 
+    # Select by stable ID so display order never changes which reading is loaded.
+    def load(id)
+      readings.find { |reading| reading['ID'] == id } || raise(Error, 'Saved reading not found.')
+    end
+
     # Return saved readings in their original save order for the review command.
     def readings
       read_history['readings']

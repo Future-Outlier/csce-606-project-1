@@ -9,14 +9,15 @@ The document will evolve with implementation and does not block unrelated coding
 - CLI
     - owns the main-menu loop, shared runner, and save-file path
     - prompts for a non-blank question and creates each Session
-    - renders Review history sorted by `saved_at`, newest first; Load remains a placeholder
+    - renders Review history sorted by `saved_at`, newest first
+    - lists saved IDs for Load and starts a restored Session after selection
 
 - Session
     - displays the active reading and handles its command loop
     - holds the active question and interpretation
     - requests one updated interpretation after every successful draw
     - clears active reading state and returns to the main menu after Shuffle
-    - delegates saving to ReadingStore; loading session states is planned
+    - delegates saving to ReadingStore and restores the saved question, cards, and interpretation
     - handles user commands
 
 - ReadingStore
@@ -24,6 +25,7 @@ The document will evolve with implementation and does not block unrelated coding
     - assigns integer IDs and ISO 8601 save times
     - checks existing history before replacing it with a complete updated file
     - reports storage errors to Session, which keeps the active reading available
+    - retrieves a saved snapshot by ID without changing the history file
 
 - Deck
     - handles "shuffling" the deck
@@ -31,6 +33,7 @@ The document will evolve with implementation and does not block unrelated coding
     - tracks which cards have been drawn and in what order
     - ensures that the same card is not drawn twice at the same time
     - finds a drawn card by name for `view <card>`
+    - restores ordered card names to deck objects, excluding them from future draws
 
 - Card
     - holds the card ID, name, description, and terminal illustration from `cards.json`
@@ -55,9 +58,9 @@ The document will evolve with implementation and does not block unrelated coding
 │  - handles shuffle      │                                         │  │   │   │
 +─────────────────────────+                                         │  │   │   │
             ^                                                       v  │   │   v
-            │               +─────────────────────+  load   +─────────────────────+
-            │               │    readings.json    │────────>│        SESSION      │
-            │               │                     │<────────│  - holds user state │
+            │               +─────────────────────+         +─────────────────────+
+            │               │    ReadingStore     │         │        SESSION      │
+            │               │  (readings.json)    │<────────│  - holds user state │
 +─────────────────────────+ +─────────────────────+  save   │ - queries runner    │
 │           CARD          │                                 │  - renders the UI   │
 │ - id, name, description │                                 │                     │
@@ -78,6 +81,28 @@ The document will evolve with implementation and does not block unrelated coding
 The View path is `view <card>` -> `Session` -> `Deck.find_drawn_card` ->
 `Card.ascii_art` -> terminal. The illustration is stored with the card in
 `cards.json`; no image download or model call occurs when viewing it.
+
+The CLI owns the main menu, runner, and save path. Load follows this path:
+
+```text
+User -> CLI -> ReadingStore.readings -> display saved IDs and prompt
+           -> ReadingStore.load(ID) -> saved snapshot from readings.json
+           -> Session.from_reading -> Deck.restore(ordered card names)
+           -> Session.display_reading -> Session.run -> draw / view / save / shuffle
+```
+
+Load matches the saved ID rather than its position in history. The restored deck
+uses the original card objects, including descriptions and art, so subsequent
+draws exclude those cards and the three-card limit still applies. The saved
+interpretation is displayed without a model request; the next successful draw
+requests an updated interpretation using the entire ordered spread.
+
+Load never rewrites history. Saving a continued session appends a new snapshot
+with a new ID and save time; the original timestamp remains with its snapshot.
+Missing history, invalid IDs, and read failures return to the menu. A blank
+selection cancels; end-of-input exits. Before creating a Session, restoration
+rejects unknown or duplicate cards, a blank question, or a spread outside one
+to three cards so unusable data cannot become an active reading.
 
 ### local Qwen runner contract
 
@@ -157,7 +182,7 @@ User -> CLI -> Session --question, ordered card names, interpretation--> Reading
 
 ## User interface design: mock-ups, expected interactions/workflows
 
-The mock-ups show the intended full workflow. Load, card details, and in-session
+The mock-ups show the intended full workflow. Card details and in-session
 exit are not implemented in the current checkout; see the README for the
 commands the grader can run now.
 

@@ -8,8 +8,6 @@
 - Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md. Session 3 is complete; Session 4 remains.
 
 ### Essential Features - Implementation
-- write tests for load session
-- implement load session, allowing tests to inject other filepaths
 
 ### Optional Features - Implementation
 - write tests for view card details
@@ -24,6 +22,8 @@
 - View card ASCII art (#24, PR #72)
 
 ## Done
+- write tests for load session
+- implement load session, allowing tests to inject other filepaths
 - implement save session with timestamp (#15)
 - implement test coverage reports (#25, PR #58)
 - add integration tests for ReadingStore and QwenRunner, reaching 100% and 94% line coverage,

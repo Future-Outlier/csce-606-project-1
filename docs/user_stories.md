@@ -79,10 +79,17 @@ As a user I want to load a saved reading so I can continue my session.
 **Acceptance Criteria**
 
 Given the file has a saved reading,
-When the users executes the load command,
+When the user executes the load command and selects a displayed reading ID,
 Then the session state should be restored,
-And the user should see the current state of the reading,
-And the user may continue the session.
+And the user should see the saved question, cards in draw order, and interpretation,
+And loading must not request another interpretation,
+And the user may view restored cards or continue drawing unique cards up to three total,
+And saving the continued session must append a snapshot without replacing the original.
+
+Given no saved readings exist, or the user selects an invalid or missing ID,
+When the user tries to load a reading,
+Then the system must display a clear message and keep the main menu available.
+A blank selection cancels loading, and end-of-input exits cleanly.
 
 Given the user has executed the load command with a valid reading,
 When loading fails,

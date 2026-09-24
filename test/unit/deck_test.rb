@@ -34,4 +34,13 @@ class TestDeck < Minitest::Test
 
     assert_equal drawn, @deck.find_drawn_card("  #{drawn.name.upcase}  ")
   end
+
+  def test_restored_cards_keep_their_order_and_are_excluded_from_future_draws
+    @deck.restore(['Card Two'])
+
+    assert_equal [@card_two], @deck.drawn_cards
+    assert_equal @card_one, @deck.draw_card
+    assert_equal [@card_two, @card_one], @deck.drawn_cards
+    assert_nil @deck.draw_card
+  end
 end

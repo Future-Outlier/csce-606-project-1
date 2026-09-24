@@ -3,7 +3,7 @@
 require_relative 'session'
 
 module TarotCLI
-  class CLI
+  class CLI # rubocop:disable Metrics/ClassLength
     USAGE = <<~TEXT
       Usage: tarot [command]
 
@@ -18,7 +18,7 @@ module TarotCLI
     COMMAND_HANDLERS = {
       'help' => :show_usage, '-h' => :show_usage, '--help' => :show_usage,
       'new' => :start_session, 'review' => :review_readings,
-      'load' => :show_load_placeholder, 'draw' => :show_draw_without_reading,
+      'load' => :load, 'draw' => :show_draw_without_reading,
       'save' => :show_save_without_reading, 'shuffle' => :show_shuffle_without_reading,
       'exit' => :exit, 'quit' => :exit
     }.freeze
@@ -64,7 +64,38 @@ module TarotCLI
       puts USAGE
     end
 
-    def show_load_placeholder = puts 'not yet implemented'
+    # Select a snapshot before starting a session so failed loads leave the menu usable.
+    def load
+      store = ReadingStore.new(path: @save_path)
+      readings = store.readings
+      return puts 'No saved readings found.' if readings.empty?
+
+      id = prompt_for_reading_id(readings)
+      return unless id
+
+      resume_reading(store.load(id))
+    rescue ReadingStore::Error, ArgumentError => e
+      puts "Could not load reading: #{e.message}"
+    end
+
+    # Continue through the same command loop and save destination as a new reading.
+    def resume_reading(reading)
+      session = Session.from_reading(reading, runner: @runner, save_path: @save_path)
+      puts 'Session successfully loaded.'
+      session.display_reading
+      session.run
+    end
+
+    # Show saved IDs and reject partial numbers rather than selecting an unintended reading.
+    def prompt_for_reading_id(readings)
+      readings.each { |reading| puts "Reading ID: #{reading['ID']} | #{reading['saved_at']} | #{reading['question']}" }
+      puts 'Enter the reading ID to load (blank to cancel):'
+      selection = gets&.strip
+      return if selection.nil? || selection.empty?
+      raise ReadingStore::Error, 'Enter a positive reading ID.' unless selection.match?(/\A[1-9]\d*\z/)
+
+      selection.to_i
+    end
 
     def show_draw_without_reading
       missing_reading('draw')

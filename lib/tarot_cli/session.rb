@@ -27,6 +27,29 @@ module TarotCLI
 
     attr_reader :question, :interpretation
 
+    # Rebuild a playable reading without drawing new cards or requesting another interpretation.
+    def self.from_reading(reading, runner: QwenRunner.new, save_path: ReadingStore::DEFAULT_PATH)
+      unless (1..MAX_CARDS).cover?(reading['cards'].size) && !reading['question'].strip.empty?
+        raise ArgumentError, 'Saved reading needs a question and one to three cards.'
+      end
+
+      deck = Deck.new
+      deck.restore(reading['cards'])
+      new(
+        reading['question'], deck: deck, runner: runner,
+                             interpretation: reading['interpretation'], save_path: save_path
+      )
+    end
+
+    # Show restored state before the user chooses how to continue the reading.
+    def display_reading
+      puts "Question: #{@question}"
+      display_spread
+      puts 'INTERPRETATION:'
+      puts @interpretation
+      show_usage
+    end
+
     # Keep the active reading and its save destination together for this session.
     def initialize(question, deck: Deck.new, runner: QwenRunner.new, interpretation: nil, save_path: ReadingStore::DEFAULT_PATH)
       @question = question

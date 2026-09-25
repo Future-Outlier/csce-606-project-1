@@ -22,7 +22,7 @@ module TarotCLI
       'help' => :show_usage,
       'new' => :non_session_command, 'review' => :non_session_command,
       'load' => :non_session_command,
-      'exit' => :not_implemented, 'quit' => :not_implemented
+      'exit' => :exit_with_statement, 'quit' => :exit_with_statement
     }.freeze
 
     attr_reader :question, :interpretation
@@ -158,8 +158,9 @@ module TarotCLI
       @deck.shuffle
       @question = nil
       @interpretation = nil
-      puts 'Session cleared. All cards are available again. Returning to Main Menu...'
-      :exit
+      exit_with_statement
+      puts 'Session cleared. All cards are available again.'
+      exit_with_statement
     end
 
     def non_session_command
@@ -174,6 +175,11 @@ module TarotCLI
         Unknown command.
         #{AVAILABLE_COMMANDS}
       TEXT
+    end
+
+    def exit_with_statement
+      puts 'Returning to Main Menu...'
+      :exit
     end
 
     def not_implemented

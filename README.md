@@ -25,6 +25,12 @@ llama serve -hf ggml-org/Qwen3.5-0.8B-GGUF
 
 Wait until the server reports that it is listening before drawing any cards.
 
+If your server isn't working, it may have too much context for you local machine. Try:
+
+```bash
+llama serve -hf ggml-org/Qwen3.5-0.8B-GGUF -c 4096 -np 1
+```
+
 ## running the app
 
 Start the interactive CLI:

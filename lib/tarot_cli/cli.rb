@@ -4,6 +4,14 @@ require_relative 'session'
 
 module TarotCLI
   class CLI # rubocop:disable Metrics/ClassLength
+    BANNER = <<~TEXT
+      ========================================================================
+                           TAROT CLI v1.0
+      ========================================================================
+      Welcome.
+      Type 'help' to see available commands.
+    TEXT
+
     USAGE = <<~TEXT
       Usage: tarot [command]
 
@@ -35,8 +43,7 @@ module TarotCLI
         return result == :unknown ? 1 : 0
       end
 
-      puts 'Welcome to tarot-cli.'
-      puts "Type 'help' to see available commands."
+      puts BANNER
 
       while (line = gets)
         break if execute(line) == :exit
@@ -183,6 +190,7 @@ module TarotCLI
 
     def exit_with_statement
       puts 'Returning to Main Menu...'
+      puts BANNER
       :exit
     end
 

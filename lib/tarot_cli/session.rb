@@ -8,6 +8,14 @@ module TarotCLI
   class Session # rubocop:disable Metrics/ClassLength
     MAX_CARDS = 3
 
+    BANNER = <<~TEXT
+      ========================================================================
+                           TAROT CLI v1.0
+      ========================================================================
+      Welcome.
+      Type 'help' to see available commands.
+    TEXT
+
     LINE = <<~TEXT
       ------------------------------------------------------------------------
     TEXT
@@ -187,6 +195,7 @@ module TarotCLI
 
     def exit_with_statement
       puts 'Returning to Main Menu...'
+      puts BANNER
       :exit
     end
 

@@ -21,6 +21,7 @@ class Deck
     card
   end
 
+  # Each draw samples randomly, so Shuffle only needs to return drawn cards to the pool.
   def shuffle
     @drawn_cards.clear
   end

@@ -49,7 +49,6 @@ module TarotCLI
       )
     end
 
-    # Show restored state before the user chooses how to continue the reading.
     def display_reading
       puts "Question: #{@question}"
       display_spread
@@ -58,7 +57,6 @@ module TarotCLI
       show_usage
     end
 
-    # Keep the active reading and its save destination together for this session.
     def initialize(question, deck: Deck.new, runner: QwenRunner.new, interpretation: nil, save_path: ReadingStore::DEFAULT_PATH)
       @question = question
       @deck = deck
@@ -78,7 +76,6 @@ module TarotCLI
       0
     end
 
-    # Session commands operate on the active reading until it returns to the main menu.
     def execute(line)
       command = line.strip
       execute_command(command) unless command.empty?
@@ -126,7 +123,6 @@ module TarotCLI
       puts "Could not save reading: #{e.message}"
     end
 
-    # A useful saved reading needs both a question and at least one drawn card.
     def save_error
       return 'Cannot save a reading without a question. Start a new reading first.' if @question.to_s.strip.empty?
 
@@ -158,6 +154,7 @@ module TarotCLI
       puts "Start a new reading with 'new' and enter a question before drawing."
     end
 
+    # Clear the previous interpretation so a failed request cannot save text for an older spread.
     def interpret_spread
       @interpretation = nil
       @interpretation = @runner.interpret(

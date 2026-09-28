@@ -29,7 +29,7 @@ module TarotCLI
       readings.find { |reading| reading['ID'] == id } || raise(Error, 'Saved reading not found.')
     end
 
-    # Return saved readings in their original save order for the review command.
+    # Preserve file order here; the CLI chooses the display order.
     def readings
       read_history['readings']
     rescue SystemCallError, IOError, JSON::JSONError => e
@@ -70,7 +70,6 @@ module TarotCLI
       ids.uniq.size == ids.size
     end
 
-    # Check the design's field types before adding anything to an existing file.
     def valid_reading?(reading)
       return false unless reading.is_a?(Hash)
       return false unless reading['ID'].is_a?(Integer) && reading['ID'].positive?

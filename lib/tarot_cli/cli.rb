@@ -93,7 +93,6 @@ module TarotCLI
       session.run
     end
 
-    # Show saved IDs and reject partial numbers rather than selecting an unintended reading.
     def prompt_for_reading_id(readings)
       display_readings(readings)
       valid_ids = readings.map { |reading| reading['ID'].to_i }
@@ -108,6 +107,7 @@ module TarotCLI
       end
     end
 
+    # Reject partial numbers such as "1oops" before converting them to an ID.
     def valid_selection?(selection, valid_ids)
       unless selection.match?(/\A[1-9]\d*\z/)
         puts 'Error: Please enter a positive reading ID number.'
@@ -171,7 +171,6 @@ module TarotCLI
       end
     end
 
-    # Carry the chosen runner and save destination into every new reading.
     def start_session
       question = prompt_for_question
       Session.new(question, runner: @runner, save_path: @save_path).run if question

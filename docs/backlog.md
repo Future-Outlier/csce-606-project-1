@@ -2,20 +2,12 @@
 
 ## To Do
 
-### Planning and Design
-
-### Pair Programming
-- Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md. Session 3 is complete; Session 4 remains.
-
-### Essential Features - Implementation
-
-### Final Deliverables
+## In Progress
 - finalize docs/design.md
 
-## In Progress
-- Implement `describe <card>` by drawn card name and update documentation (#23)
-
 ## Done
+- Implement `describe <card>` by drawn card name and update documentation (#23)
+- Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md. Session 3 is complete; Session 4 remains.
 - View card ASCII art (#24, PR #72)
 - write tests for load session
 - implement load session, allowing tests to inject other filepaths

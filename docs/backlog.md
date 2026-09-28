@@ -3,9 +3,9 @@
 ## To Do
 
 ## In Progress
-- finalize docs/design.md
 
 ## Done
+- finalize docs/design.md
 - Implement `describe <card>` by drawn card name and update documentation (#23)
 - Perform two (2) more pair programming sessions with alternating roles (3-4 of 4 required). Document in docs/pairing_log.md. Session 3 is complete; Session 4 remains.
 - View card ASCII art (#24, PR #72)

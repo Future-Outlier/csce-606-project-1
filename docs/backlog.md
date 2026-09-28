@@ -46,7 +46,7 @@
 - create repository
 - Perform first (1 of 4) pair programming session with alternating roles and document in docs/pairing_log.md
 - Perform one (1) additional pair programming session with alternating roles (2 of 4 required). Document in docs/pairing_log.md
-- perform and document end project retrospective (#42)
+- Perform and document the end-of-project retrospective (#28)
 - Add CLI foundation and tests (PR #3)
 - Add GitHub Actions for CI (PR #4)
 - Remove redundant comments per code review (PR #5)

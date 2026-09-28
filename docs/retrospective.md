@@ -9,11 +9,15 @@
 
 1. AI-generated tests often repeated the same behavior, which made the test suite larger and harder to maintain.
 2. UX details were difficult to predict from requirements alone. Blank input, command feedback, and menu transitions became clear only after we used the complete product ourselves.
+3. Documentation sometimes fell behind implementation, which made the final project state harder to verify.
+4. Features that worked independently sometimes exposed new problems only after they were integrated into the complete workflow.
 
 ## What the pair would improve next time
 
 1. We would require every AI-generated test to protect a distinct behavior and proactively delete or merge redundant tests.
 2. We would run complete usability walkthroughs earlier and after each feature because human use revealed improvements that code and automated tests missed.
+3. We would update the README, Design, and Backlog with each feature so the documentation stays synchronized with the code.
+4. We would integrate branches earlier and run end-to-end tests after each merge to find cross-feature problems sooner.
 
 ## Whether the final app met the original goal
 

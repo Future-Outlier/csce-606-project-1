@@ -118,6 +118,7 @@ module TarotCLI
 
       @reading_store.save(question: @question, cards: @deck.drawn_cards.map(&:name), interpretation: @interpretation)
       puts 'Session successfully saved to disk. Returning to Main Menu...'
+      puts BANNER
       :exit
     rescue ReadingStore::Error => e
       puts "Could not save reading: #{e.message}"

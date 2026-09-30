@@ -4,6 +4,8 @@ A terminal tarot app for drawing cards and receiving local Qwen interpretations.
 
 ## installation/setup instructions
 
+First, clone this repository.
+
 Before starting `tarot-cli`, install Ruby 4.0.1, `llama.cpp`, and the project
 dependencies. On macOS with Homebrew, run the following commands from the
 repository directory:
